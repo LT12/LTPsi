@@ -9,13 +9,13 @@ cdef public double sRys[6][6]
 cdef public double Sa0[10]
 Sa0[0], sRysN[0], sRys[0][0] = 1 , 1 , 1
 
-#-------------------------------------------------------------------------------------------------------------
-#    Overlap Integral Functions
-#-------------------------------------------------------------------------------------------------------------    
+#------------------------------------------------------------------------#
+#                   Overlap Integral Functions                           #            
+#------------------------------------------------------------------------#    
 
 cdef double primOverlapIntegral(double x1,double y1,double z1,double x2,double y2,double z2,
-                          double a1,double a2,int xnum1,int ynum1,int znum1,int xnum2,
-                          int ynum2,int znum2)nogil:
+                                double a1,double a2,int xnum1,int ynum1,int znum1,int xnum2,
+                                int ynum2,int znum2)nogil:
     """Calculates the overlap integral for primitive Gaussian-type orbitals.
      
         Keyword arguments:
@@ -27,24 +27,29 @@ cdef double primOverlapIntegral(double x1,double y1,double z1,double x2,double y
     """
 
     cdef double a12,ra12,Px,Py,Pz,sOL,Overlap,xoverlap,yoverlap,zoverlap
+    
     #sum of exponential factors and reduced exponential factor
-    a12, ra12 = (a1 + a2), a1 * a2 / (a1 + a2)
+    a12 = a1 + a2
+    ra12 = a1 * a2 / a12
+
     #Center of two Gaussians
-    Px = (a1 * x1 + a2 * x2)/a12
-    Py = (a1 * y1 + a2 * y2)/a12
-    Pz = (a1 * z1 + a2 * z2)/a12
+    Px = (a1 * x1 + a2 * x2) / a12
+    Py = (a1 * y1 + a2 * y2) / a12
+    Pz = (a1 * z1 + a2 * z2) / a12
     
     # Spherical Overlap Term
-    sOL = exp(-ra12 * norm(x1-x2,y1-y2,z1-z2)) * pow(M_PI / a12,3./2) 
+    sOL = exp(-ra12 * norm(x1-x2,y1-y2,z1-z2)) * pow(M_PI / a12, 1.5) 
+    #norm = sum((X1-X2)**2)
+
     #Cartesian Angular Overlaps
     if (xnum1<0) or (xnum2<0) or (ynum1<0) or (ynum2<0) or (znum1<0) or (znum2<0):
         Overlap = 0
     else:
- 
+     
         xoverlap = OL_Sab_terms(xnum1,xnum2,a12,x1-x2,Px-x1)
- 
+    
         yoverlap = OL_Sab_terms(ynum1,ynum2,a12,y1-y2,Py-y1)
- 
+    
         zoverlap = OL_Sab_terms(znum1,znum2,a12,z1-z2,Pz-z1)
          
         Overlap = sOL * xoverlap * yoverlap * zoverlap 
@@ -74,25 +79,25 @@ cdef double OL_Sab_terms(int q1,int q2,double a12,double AB,double PA)nogil:
     Sa0[1] = PA
     #calculate S(a+b,0)
     for i in xrange(2, n + 1):
- 
+    
         Sa0[i] = PA * Sa0[i-1] + (i - 1) * Sa0[i-2] / (2 * a12)
- 
+    
     if q2 == 0: return Sa0[q1]
      
     #S(a+b,0) -> S(a,b) using transfer relation  
     cdef double Sab = 0
     for i in xrange(q2+1):
+
         Sab += Sa0[q1+i] * binom(q2,i) * pow(AB,q2 - i)
         
     return Sab
  
-#---------------------------------------------------------------------------------------------------------------------------------------    
-#---------------------------------------------------------------------------------------------------------------------------------------
-# Electron-Nuclear Attraction Integrals
-#---------------------------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------#
+#                  Electron-Nuclear Attraction Integrals                  #
+#-------------------------------------------------------------------------#
 cdef double primNuclearAttractionIntegral(double XN,double YN,double ZN,double X1,double Y1,
-                                           double Z1, double X2,double Y2,double Z2,double a1,
-                                           double a2,int x1,int y1,int z1,int x2,int y2,int z2)nogil:
+                                          double Z1, double X2,double Y2,double Z2,double a1,
+                                          double a2,int x1,int y1,int z1,int x2,int y2,int z2)nogil:
     ''' computes nuclear attraction integral for 2 primitive GTOs <2|1/r|1>
     
         Arguments:
@@ -114,8 +119,8 @@ cdef double primNuclearAttractionIntegral(double XN,double YN,double ZN,double X
     Py = (a1 * Y1 + a2 * Y2)/a12
     Pz = (a1 * Z1 + a2 * Z2)/a12
     
-    #Spherical Terms
-    sNAI = (2 * M_PI / a12)*exp(-ra12 * norm(X1-X2,Y1-Y2,Z1-Z2))#Spherical nuclear attraction term
+    #Spherical Term
+    sNAI = (2 * M_PI / a12)*exp(-ra12 * norm(X1-X2,Y1-Y2,Z1-Z2))
     T = a12 * norm(Px-XN,Py-YN,Pz-ZN)
     qsum = x1+x2+y1+y2+z1+z2
     if qsum == 0: return sNAI*Boys0(T)
@@ -169,19 +174,19 @@ cdef double nNAIRys(double t,int q1,int q2,double a12,
         
     return Rys
     
-#------------------------------------------------------------------------------------------------------------------
-#  Electron-Electron Repulsion Integral
-#------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------#
+#                      Electron-Electron Repulsion Integral                          #
+#------------------------------------------------------------------------------------#
 cdef double primElecRepulInt(double x1,double y1,double z1,double x2,double y2,double z2,
-                              double x3,double y3,double z3,double x4,double y4,double z4,
-                              double a1, double a2, double a3, double a4, int qx1, int qx2,
-                              int qx3, int qx4, int qy1,int qy2, int qy3, int qy4,
-                              int qz1, int qz2, int qz3, int qz4):
+                             double x3,double y3,double z3,double x4,double y4,double z4,
+                             double a1, double a2, double a3, double a4, int qx1, int qx2,
+                             int qx3, int qx4, int qy1,int qy2, int qy3, int qy4,
+                             int qz1, int qz2, int qz3, int qz4)nogil:
 
     cdef double a12,a34,a1234,rA,E12,E34,sERI,T,E1234,Px,Py,Pz,Qx,Qy,Qz
     cdef int i,norder,qsum
     
-    a12 , a34 = a1 + a2, a3 + a4
+    a12,a34 = a1 + a2, a3 + a4
     a1234 = a12 * a34
     rA = a1234 / (a12 + a34)
     
@@ -227,8 +232,9 @@ cdef double nERIRys(double t,int q1,int q2,int q3,int q4,double a12,double a34,
     if q1+q2+q3+q4 == 0:   return 1
     
     cdef double PQ,a1234,C00
-        
-    PQ = P - Q #distance between the two gaussian centers
+    
+    #distance between the two gaussian centers   
+    PQ = P - Q
     a1234 = a12 + a34
 
     C00 = P - A - a34 * (PQ) * t / a1234
@@ -287,8 +293,9 @@ cdef double nERIRys(double t,int q1,int q2,int q3,int q4,double a12,double a34,
 
     for i in xrange(q4+1):
         Rys0 = 0
-        for j in xrange(q2+1): # I(i,j,m,0)<-I(n,0,m,0)
-
+        for j in xrange(q2+1):
+           
+            # I(i,j,m,0)<-I(n,0,m,0)
             Poly1 = binom(q2,j) * pow(AB,q2-j) * sRys[j+q1][i+q3]
             Rys0 += Poly1
             
@@ -297,9 +304,9 @@ cdef double nERIRys(double t,int q1,int q2,int q3,int q4,double a12,double a34,
         
     return Rys
 
-#------------------------------------------------------------------------------------------------------------------
-#Rys Quad Roots and Weights
-#------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------#
+#               Rys Quad Roots and Weights, Chebyshev-Gauss Integrator              #
+#-----------------------------------------------------------------------------------#
 cdef void Roots(int n,double X)nogil:
     "Return roots and weights of nth order Rys quadrature"
     if n<1:
@@ -1707,7 +1714,7 @@ cdef void Root5(double X)nogil:
     weights[2] = WW3
     weights[3] = WW4
     weights[4] = WW5
-
+    
 cdef double ChebGausInt(double eps,int M,double a12,double a34,int qx1,int qx2,int qx3,int qx4,
                         int qy1,int qy2,int qy3, int qy4,int qz1,int qz2,int qz3, int qz4,double x1,
                         double x2, double x3,double x4, double y1, double y2, double y3,double y4,
@@ -1741,12 +1748,14 @@ cdef double ChebGausInt(double eps,int M,double a12,double a34,int qx1,int qx2,i
         c0 = j * c0 + (1-j) * sqrt(0.5 * (1 + c0))
         s0 *= j + (1-j)/(2 * c0)
         c,s = c0,s0
-
+        
         for i in xrange(1,n,2):
             xp = 1 + 0.21220659078919378 * s * c * (3 + 2*s*s) - <double>i/n
             if ceil(3*(i+j+j)/3.) > i + j:
+               
                 t1 = 0.25 * (-xp+1) * (-xp+1)
                 t2 = 0.25 * (xp+1) * (xp+1)
+               
                 ang1 = (nERIRys(t1,qx1,qx2,qx3,qx4,a12,a34,x1,x2,x3,x4,Px,Qx)*
                         nERIRys(t1,qy1,qy2,qy3,qy4,a12,a34,y1,y2,y3,y4,Py,Qy)*
                         nERIRys(t1,qz1,qz2,qz3,qz4,a12,a34,z1,z2,z3,z4,Pz,Qz))
@@ -1754,7 +1763,8 @@ cdef double ChebGausInt(double eps,int M,double a12,double a34,int qx1,int qx2,i
                 ang2 = (nERIRys(t2,qx1,qx2,qx3,qx4,a12,a34,x1,x2,x3,x4,Px,Qx)* 
                         nERIRys(t2,qy1,qy2,qy3,qy4,a12,a34,y1,y2,y3,y4,Py,Qy)*
                         nERIRys(t2,qz1,qz2,qz3,qz4,a12,a34,z1,z2,z3,z4,Pz,Qz))
-                chp += 0.5*(exp(-T*t1) * ang1 + exp(-T*t2) * ang2) * s * s * s * s
+                
+                chp += 0.5 * (exp(-T*t1) * ang1 + exp(-T*t2) * ang2) * s ** 4
                 
             xp = s 
             s = s*c1 + c*s1
