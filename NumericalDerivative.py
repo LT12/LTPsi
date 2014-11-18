@@ -2,59 +2,69 @@
 Created on Nov 9, 2014
 
 @author: Larry
+
 '''
+
 from SCF import SCF
 import numpy as np
+import scipy as sp
 
+def SCFEnergy(mol,cart,m,d,b):
+    res = SCF(mol,basis = b,MP2 = m, dipole = d, cartMatrix = cart)
+    return res.TotalEnergy
 
-def calcDer(mol,i,j,m,d):
-    
-    dx = 1E-9
-    
-    cart = mol.getCartMatrix()
+def calcDer(mol,i,j,m,d,b):
+
+    dx = 1E-8
+
+    cart = mol.cartMatrix
     cart1 = np.copy(cart)
-    
-    x = cart[i,j]
-    
-    cart1[i,j] = x - dx
-    
-    mol.setCartMatrix(cart1)    
-    scf = SCF(mol,"sto3G")
-    E1 = scf.TotalEnergy+scf.MP2()
 
-    cart1[i,j] = x + dx
-    mol.setCartMatrix(cart1)
-    scf = SCF(mol,"sto3G",MP2=m,dipole=d)
-    E2 = scf.TotalEnergy
+    cart[i,j] -= dx
+    cart1[i,j] += dx
 
-    mol.setCartMatrix(cart)
+    dE = SCFEnergy(mol,cart1,m,d,b) - SCFEnergy(mol,cart,m,d,b)
 
-    return (E2-E1)/(2*dx)     
-    
-def calcGrad(mol,m,d):
-    
-    Grad = np.ndarray(np.shape(mol.getCartMatrix()))
-    
+    cart[i,j] += dx
+
+    return dE/(2*dx)
+
+def calcGrad(mol,m,d,b):
+
+    Grad = np.ndarray(np.shape(mol.cartMatrix))
+
     for i in xrange(len(mol.atomType)):
         for j in xrange(3):
-            Grad[i,j] = calcDer(mol,i,j,m,d)     
+
+            Grad[i,j] = calcDer(mol,i,j,m,d,b)
+
     return Grad
 
-def Optimize(mol,m=False,d=False):
-    
-    cartNew = np.copy(mol.getCartMatrix())   
-    cartOld = np.zeros(np.shape(cartNew))
-    cartList = [cartNew]
-    
-    eps = 1
-    precesion = 0.00001
+def Optimize(mol,m=False,d=False,basis=""):
 
-    while abs(np.linalg.norm(cartNew-cartOld))>precesion:
-        
+    cartNew = np.copy(mol.cartMatrix)
+    cartOld = np.zeros(np.shape(cartNew))
+    cartList = []
+    precesion = 0.00001
+    eps = 2
+    grad=5
+    while sp.linalg.norm(grad) > precesion:
         cartOld = cartNew
-        cartNew = cartOld - eps*calcGrad(mol,m,d)
-        mol.setCartMatrix(cartNew)
+        grad = calcGrad(mol,m,d,basis)
+        print sp.linalg.norm(grad)
+        cartNew = cartOld - eps*grad
+        mol.cartMatrix = cartNew
         cartList.append(cartNew)
-        eps *= 0.9
-        
-    print cartNew
+        eps = _LS(mol,m,d,basis,e=eps)
+        print eps
+
+    return cartList
+
+def _LS(mol,m,d,bs,e=1):
+    j,c,b = 0,0.1,0.75
+    cart = mol.cartMatrix
+    grad = calcGrad(mol,m,d,bs)
+    norm2 = sp.linalg.norm(grad)**2
+    while SCFEnergy(mol,cart,m,d,bs) - SCFEnergy(mol,cart-e*grad,m,d,bs) <= c*e*norm2:
+        e *= b
+    return e
