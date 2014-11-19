@@ -6,6 +6,7 @@ Created on Sep 28, 2014
 
 import numpy as np
 from scipy.linalg import eigh
+from scipy.sparse.linalg import eigsh
 from atomicParam import *
 from CMolecularIntegrals import MolecularIntegrals
 from Orbital import Orbital
@@ -172,7 +173,11 @@ class SCF():
     def symOrthogMatrix(self):
 
         eig,eigVM = eigh(self.OverlapMatrix,turbo = True)
-
+        #eig,eigVM = eigsh(self.OverlapMatrix)
+        idx = eig.argsort()
+        eig = eig[idx]
+        eigVM = eigVM[:,idx]
+        
         eigT = np.diag(np.reciprocal(np.sqrt(eig)))
 
         self.symS = np.dot(eigVM,np.dot(eigT,eigVM.T))
@@ -188,6 +193,10 @@ class SCF():
         self.transFockM = np.dot(self.symS.T,np.dot(Fock,self.symS))
 
         self.eig,eigVM = eigh(self.transFockM,turbo=True)
+        #self.eig,eigVM = eigsh(self.transFockM)
+        idx = self.eig.argsort()
+        self.eig = self.eig[idx]
+        eigVM = eigVM[:,idx]
 
         self.AOcoefs = np.dot(self.symS,eigVM)
 

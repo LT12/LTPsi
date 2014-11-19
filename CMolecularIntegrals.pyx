@@ -1,4 +1,4 @@
-#cython: profile=True
+#cython: profile = True
 '''
 Created on Oct 20, 2014
 
@@ -77,7 +77,7 @@ class MolecularIntegrals():
         cdef int N,i,j
         N = self.NumOrbitals # number of orbitals
         cdef double [:,:] NuclearMatrix = np.zeros((N,N),dtype=np.float64)
-	
+    
         for i in xrange(N):
             for j in xrange(i+1):
             
@@ -104,7 +104,7 @@ class MolecularIntegrals():
                 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double[:,:,:,:] ElectronRepulsionTensor(int N, object orbList):
+cdef double[:,:,:,:] ElectronRepulsionTensor(int N, object orbs):
     cdef int i,j,k,l
     cdef double [:,:,:,:] ERT = np.ndarray((N,N,N,N),dtype=np.float64)
 
@@ -112,10 +112,10 @@ cdef double[:,:,:,:] ElectronRepulsionTensor(int N, object orbList):
         for j in xrange(i+1):
             for k in xrange(N):
                 for l in xrange(k+1):
-                    if (i+1) * (j+1) >= (k+1) * (l+1):
+                    if (i + 1) * (j + 1) >= (k + 1) * (l + 1):
 
-                        ERT[i,j,k,l] = ElecRepIntegral(orbList[i],orbList[j],
-                                                       orbList[k],orbList[l])
+                        ERT[i,j,k,l] = ElecRepIntegral(orbs[i],orbs[j],
+                                                       orbs[k],orbs[l])
                         ERT[j,i,k,l] = ERT[i,j,k,l]
                         ERT[i,j,l,k] = ERT[i,j,k,l]
                         ERT[j,i,l,k] = ERT[i,j,k,l]
@@ -166,7 +166,7 @@ cdef double OverlapIntegral(object orb1, object orb2):
     
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cdef double DipoleIntegral(object orb1,object orb2,int cart):
+cdef double DipoleIntegral(object orb1, object orb2, int cart):
 
     cdef int xnum1,ynum1,znum1,xnum2,ynum2,znum2,nPrim1,nPrim2,i,j,qnumA,qnumB
     cdef double Integral, Const
@@ -231,7 +231,7 @@ cdef double DipoleIntegral(object orb1,object orb2,int cart):
                 qnumB = znum2
                 
             p = 1/(a1[i] + a2[j])
-            X = (a1[i]*cent1[cart] + a2[j]*cent2[cart]) * p
+            X = (a1[i] * cent1[cart] + a2[j] * cent2[cart]) * p
             Integral += Const*(X * P + 0.5 * p * (qnumA * Pam1 + qnumB * Pbm1))
     
     return Integral
@@ -301,12 +301,12 @@ cdef double KineticIntegral(object orb1,object orb2):
 @cython.wraparound(False)
 cdef double NuclearIntegral(object orb1,object orb2,object atomType,double [:,:] cartN):
 
-    cdef int xnum1,ynum1,znum1,xnum2,ynum2,znum2,nPrim1,nPrim2,i,j
+    cdef int x1,y1,z1,x2,y2,z2,nPrim1,nPrim2,i,j,idx,Z,N
     cdef double Integral, Const
     Integral = 0
     #get Angular Cartesian numbers for orbitals
-    xnum1,ynum1,znum1 = orb1.qnums
-    xnum2,ynum2,znum2 = orb2.qnums
+    x1,y1,z1 = orb1.qnums
+    x2,y2,z2 = orb2.qnums
     
     #Center of each orbital
     cdef double [:] cent1 = orb1.Center
@@ -329,11 +329,11 @@ cdef double NuclearIntegral(object orb1,object orb2,object atomType,double [:,:]
             
             Const = d1[i] * d2[j]   #Product of contraction coefficients
             
-            for k in enumerate(atomType):
-                Z = getAtomicCharge(k[1])
-                Integral += -Z * Const * primNuc(cartN[k[0],0],cartN[k[0],1],cartN[k[0],2],cent1[0],
+            for idx,k in enumerate(atomType):
+                Z = getAtomicCharge(k)
+                Integral += -Z * Const * primNuc(cartN[idx,0],cartN[idx,1],cartN[idx,2],cent1[0],
                                                  cent1[1],cent1[2],cent2[0],cent2[1],cent2[2],a1[i],
-                                                 a2[j],xnum1,ynum1,znum1,xnum2,ynum2,znum2)
+                                                 a2[j],x1,y1,z1,x2,y2,z2)
     return Integral
 
 @cython.boundscheck(False)

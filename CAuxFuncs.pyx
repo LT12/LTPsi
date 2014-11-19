@@ -1,22 +1,24 @@
 #cython: cdivision = True
 from libc.math cimport exp, sqrt, pow, erf, M_PI
 
-cpdef double NormFac(double a,int xnum,int ynum,int znum):
-    """Calculate normalization factor for primitive Gaussian-type orbital
+cpdef double NormFac(double a,int x,int y,int z):
+    """Calculate normalization factor for primitive Gaussian-type
+       orbital
     
         Keyword Arguments:
         a -- orbital exponential coefficient
-        xnum, ynum, znum --- Angular "quantum" numbers for orbital
+        x, y, z --- Angular "quantum" numbers for orbital
         
         return:
         ----------------
         Double - normalization factor
     """
-    cdef double Norm,FactTerm
-
-    FactTerm = factorial2(2 * xnum - 1) * factorial2(2 * ynum - 1) * factorial2(2 * znum - 1)
     
-    Norm = ((2 * a / M_PI)**(.75)*(4*a)**((xnum+ynum+znum)/2.)/sqrt(FactTerm))
+    cdef double Norm,Fact
+
+    Fact = factorial2(2 * x - 1) * factorial2(2 * y - 1) * factorial2(2 * z - 1)
+    
+    Norm = (2 * a / M_PI) ** (.75) * (4 * a) ** (0.5 * (x + y + z)) / sqrt(Fact)
     
     return Norm
 
@@ -50,12 +52,13 @@ cdef double Boys0(double T)nogil:
     """
     cdef double sqT = sqrt(T)
     if sqT<1E-5: return 1
-    if sqT>10: return 0.886226925452758014/sqT
-    else: return 0.886226925452758014  * erf(sqT)/sqT
+    if sqT>10: return 0.886226925452758014 / sqT
+    else: return 0.886226925452758014  * erf(sqT) / sqT
     
 
 cdef int binom(int n, int k)nogil:
-    """ Calculates nCk or the kth binomial coefficent for nth power binomial
+    """ Calculates nCk or the kth binomial coefficent for nth power
+        binomial
     
         Keyword Arguments:
         n - integer, order of binomial
@@ -67,11 +70,12 @@ cdef int binom(int n, int k)nogil:
     
     cdef int res = 1
     cdef int i
+    
     # Since C(n, k) = C(n, n-k)
     if k > n - k :
         k = n - k
  
-    # Calculate value of [n * (n-1) *---* (n-k+1)] / [k * (k-1) *----* 1]
+    # Calculate value of [n * (n-1) *---* (n-k+1)] / [k * (k-1) *---* 1]
     for i in xrange(k):
     
         res *= (n - i)

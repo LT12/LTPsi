@@ -109,6 +109,7 @@ cdef double primNuclearAttractionIntegral(double XN,double YN,double ZN,double X
         x2 - angular quant number for orb. 2
     '''
     cdef double a12, ra12, sNAI, T, Px, Py, Pz
+    cdef double PXN, PYN, PZN
     cdef int i, qsum, norder
     
     #Sum and reduced sum of exponential coeffs.
@@ -118,10 +119,13 @@ cdef double primNuclearAttractionIntegral(double XN,double YN,double ZN,double X
     Px = (a1 * X1 + a2 * X2)/a12
     Py = (a1 * Y1 + a2 * Y2)/a12
     Pz = (a1 * Z1 + a2 * Z2)/a12
+    PXN = Px - XN
+    PYN = Py - YN
+    PZN = Pz - ZN
     
     #Spherical Term
     sNAI = (2 * M_PI / a12)*exp(-ra12 * norm(X1-X2,Y1-Y2,Z1-Z2))
-    T = a12 * norm(Px-XN,Py-YN,Pz-ZN)
+    T = a12 * norm(PXN,PYN,PZN)
     qsum = x1+x2+y1+y2+z1+z2
     if qsum == 0: return sNAI*Boys0(T)
     
@@ -134,9 +138,9 @@ cdef double primNuclearAttractionIntegral(double XN,double YN,double ZN,double X
     for i in xrange(norder):
         t = roots[i]
         t /= 1 + t
-        nAngFacX = nNAIRys(t,x1,x2,a12,X1-X2,X1-Px,Px-XN)
-        nAngFacY = nNAIRys(t,y1,y2,a12,Y1-Y2,Y1-Py,Py-YN)
-        nAngFacZ = nNAIRys(t,z1,z2,a12,Z1-Z2,Z1-Pz,Pz-ZN)
+        nAngFacX = nNAIRys(t,x1,x2,a12,X1-X2,X1-Px,PXN)
+        nAngFacY = nNAIRys(t,y1,y2,a12,Y1-Y2,Y1-Py,PYN)
+        nAngFacZ = nNAIRys(t,z1,z2,a12,Z1-Z2,Z1-Pz,PZN)
         aNAI += nAngFacX * nAngFacY * nAngFacZ * weights[i]
         
     NAI = sNAI * aNAI

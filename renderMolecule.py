@@ -39,16 +39,16 @@ class renderMolecule():
 		gluLookAt(0,0,10, # Camera Position
 		          0,0,0,  # Point the Camera looks at
 		          0,1,0)  # the Up-Vector
-		glutMouseFunc(mouse)
-		glutMotionFunc(motion)
-		glutSpecialFunc(keyboardListener)
+#		glutMouseFunc(mouse)
+#		glutMotionFunc(motion)
+#		glutSpecialFunc(keyboardListener)
 		glEnable(GL_LIGHT0)
 		glutDisplayFunc(self.display)
 		glMatrixMode(GL_PROJECTION)
 		gluPerspective(40.,1.,1.,40.)
 		glMatrixMode(GL_MODELVIEW)
 		glPushMatrix()
-		glutMainLoop()
+#		glutMainLoop()
 		return
 
 	def display(self):
@@ -58,8 +58,8 @@ class renderMolecule():
 		for CM in self.CA:
 			
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-			glRotatef(rotx,1,0,0)
-			glRotatef(roty,0,1,0)
+#			glRotatef(rotx,1,0,0)
+#			glRotatef(roty,0,1,0)
 			
 			for i in xrange(len(AT)):
 		
@@ -87,10 +87,10 @@ class renderMolecule():
 						gluCylinder(quadric,.08,.08,norm,20,20)
 						glPopMatrix()
 						
-			glTranslatef(posX,posY,0)	
+#			glTranslatef(posX,posY,0)	
 			glutSwapBuffers()
 			glFlush()
-			time.sleep(0.1)
+#			time.sleep(0.1)
 		
 		return
 
