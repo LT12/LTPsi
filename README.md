@@ -15,6 +15,8 @@ Current Features:<br>
 -Mulliken Population Analysis<br>
 -Moller-Posset Pertubation Theory (MP2) Energy Correction
 <br>
+Molecule Rendering with OpenGL
+<br>
 <hr>
 
 Instructions:
