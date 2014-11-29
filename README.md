@@ -13,7 +13,7 @@ Current Features:<br>
 -Rotational Constants<br>
 -Dipole Moment Calculation<br>
 -Mulliken Population Analysis<br>
--Moller-Posset Pertubation Theory (MP2) Energy Correction
+-M&oslash;ller-Plesset Pertubation Theory (MP2) Energy Correction
 <br>
 Molecule Rendering with OpenGL
 <br>

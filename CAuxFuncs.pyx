@@ -18,7 +18,7 @@ cpdef double NormFac(double a,int x,int y,int z):
 
     Fact = factorial2(2 * x - 1) * factorial2(2 * y - 1) * factorial2(2 * z - 1)
     
-    Norm = (2 * a / M_PI) ** (.75) * (4 * a) ** (0.5 * (x + y + z)) / sqrt(Fact)
+    Norm = pow(2 * a / M_PI, 0.75) * pow(4 * a, 0.5 * (x + y + z)) / sqrt(Fact)
     
     return Norm
 
@@ -40,7 +40,6 @@ cdef int factorial2(int n)nogil:
             res *= i
     return res
 
-
 cdef double Boys0(double T)nogil:
     """Calculate Boys(T,0), equal to 1/2*sqrt(pi)*erf(sqrt(T)/sqrt(T)
         
@@ -53,7 +52,7 @@ cdef double Boys0(double T)nogil:
     cdef double sqT = sqrt(T)
     if sqT<1E-5: return 1
     if sqT>10: return 0.886226925452758014 / sqT
-    else: return 0.886226925452758014  * erf(sqT) / sqT
+    else: return 0.886226925452758014 * erf(sqT) / sqT
     
 
 cdef int binom(int n, int k)nogil:

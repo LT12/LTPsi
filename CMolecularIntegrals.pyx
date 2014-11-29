@@ -1,4 +1,4 @@
-#cython: profile = True
+#cython: wraparound = False, boundscheck = False
 '''
 Created on Oct 20, 2014
 
@@ -9,7 +9,6 @@ import numpy as np
 cimport numpy as np
 from atomicParam import *
 from CprimMolInt cimport primOverlapIntegral, primNuclearAttractionIntegral,primElecRepulInt
-
 
 
 class MolecularIntegrals():
@@ -84,10 +83,7 @@ class MolecularIntegrals():
                 NuclearMatrix[i,j] = NuclearIntegral(self.orbList[i],self.orbList[j],self.atomType,self.cartMatrix)
                 
         return NuclearMatrix
- 
 
-
-                                    
     def CoreHamiltonian(self):
         '''Constructs core hamiltonian from single-electron integral matricies
         '''
@@ -102,8 +98,7 @@ class MolecularIntegrals():
                 self.CoreHam[i,j] = KI[i,j] + NAI[i,j]
                 self.CoreHam[j,i] = self.CoreHam[i,j]
                 
-@cython.boundscheck(False)
-@cython.wraparound(False)
+
 cdef double[:,:,:,:] ElectronRepulsionTensor(int N, object orbs):
     cdef int i,j,k,l
     cdef double [:,:,:,:] ERT = np.ndarray((N,N,N,N),dtype=np.float64)
@@ -127,8 +122,6 @@ cdef double[:,:,:,:] ElectronRepulsionTensor(int N, object orbs):
                 
 
 #Integration Methods:
-@cython.boundscheck(False)
-@cython.wraparound(False)
 cdef double OverlapIntegral(object orb1, object orb2):
 
     cdef int xnum1,ynum1,znum1,xnum2,ynum2,znum2,nPrim1,nPrim2,i,j
@@ -164,8 +157,7 @@ cdef double OverlapIntegral(object orb1, object orb2):
                                     a1[i],a2[j],xnum1,ynum1,znum1,xnum2,ynum2,znum2)            
     return Integral
     
-@cython.boundscheck(False)
-@cython.wraparound(False)
+
 cdef double DipoleIntegral(object orb1, object orb2, int cart):
 
     cdef int xnum1,ynum1,znum1,xnum2,ynum2,znum2,nPrim1,nPrim2,i,j,qnumA,qnumB
@@ -236,8 +228,7 @@ cdef double DipoleIntegral(object orb1, object orb2, int cart):
     
     return Integral
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
+
 cdef double KineticIntegral(object orb1,object orb2):
 
     cdef int xnum1,ynum1,znum1,xnum2,ynum2,znum2,nPrim1,nPrim2,i,j
@@ -297,8 +288,7 @@ cdef double KineticIntegral(object orb1,object orb2):
     
     return Integral
     
-@cython.boundscheck(False)
-@cython.wraparound(False)
+
 cdef double NuclearIntegral(object orb1,object orb2,object atomType,double [:,:] cartN):
 
     cdef int x1,y1,z1,x2,y2,z2,nPrim1,nPrim2,i,j,idx,Z,N
@@ -336,8 +326,7 @@ cdef double NuclearIntegral(object orb1,object orb2,object atomType,double [:,:]
                                                  a2[j],x1,y1,z1,x2,y2,z2)
     return Integral
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
+
 cdef double ElecRepIntegral(object orb1,object orb2,object orb3,object orb4):
     
     cdef double Integral,Const

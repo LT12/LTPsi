@@ -1,12 +1,12 @@
-#cython: cdivision=True,boundscheck=False,wraparound=False
+#cython: cdivision = True, wraparound = False, boundscheck = False
 from CAuxFuncs cimport Boys0, norm, binom
 from libc.math cimport exp, sqrt, M_PI, erf, pow, ceil, fabs
 
 cdef public double roots[5]
 cdef public double weights[5]
-cdef public double sRysN[6]
-cdef public double sRys[6][6]
-cdef public double Sa0[10]
+cdef public double sRysN[10]
+cdef public double sRys[10][10]
+cdef public double Sa0[20]
 Sa0[0], sRysN[0], sRys[0][0] = 1 , 1 , 1
 
 #------------------------------------------------------------------------#
@@ -27,7 +27,7 @@ cdef double primOverlapIntegral(double x1,double y1,double z1,double x2,double y
     """
 
     cdef double a12,ra12,Px,Py,Pz,sOL,Overlap,xoverlap,yoverlap,zoverlap
-    
+
     #sum of exponential factors and reduced exponential factor
     a12 = a1 + a2
     ra12 = a1 * a2 / a12
@@ -46,11 +46,11 @@ cdef double primOverlapIntegral(double x1,double y1,double z1,double x2,double y
         Overlap = 0
     else:
      
-        xoverlap = OL_Sab_terms(xnum1,xnum2,a12,x1-x2,Px-x1)
+        xoverlap = OL_Sab_terms(xnum1, xnum2, a12, x1-x2, Px-x1)
     
-        yoverlap = OL_Sab_terms(ynum1,ynum2,a12,y1-y2,Py-y1)
+        yoverlap = OL_Sab_terms(ynum1, ynum2, a12, y1-y2, Py-y1)
     
-        zoverlap = OL_Sab_terms(znum1,znum2,a12,z1-z2,Pz-z1)
+        zoverlap = OL_Sab_terms(znum1, znum2, a12, z1-z2, Pz-z1)
          
         Overlap = sOL * xoverlap * yoverlap * zoverlap 
          
@@ -80,13 +80,13 @@ cdef double OL_Sab_terms(int q1,int q2,double a12,double AB,double PA)nogil:
     #calculate S(a+b,0)
     for i in xrange(2, n + 1):
     
-        Sa0[i] = PA * Sa0[i-1] + (i - 1) * Sa0[i-2] / (2 * a12)
+        Sa0[i] = PA * Sa0[i - 1] + (i - 1) * Sa0[i - 2] / (2 * a12)
     
     if q2 == 0: return Sa0[q1]
      
     #S(a+b,0) -> S(a,b) using transfer relation  
     cdef double Sab = 0
-    for i in xrange(q2+1):
+    for i in xrange(q2 + 1):
 
         Sab += Sa0[q1+i] * binom(q2,i) * pow(AB,q2 - i)
         
@@ -222,7 +222,7 @@ cdef double primElecRepulInt(double x1,double y1,double z1,double x2,double y2,d
             nAngFacZ = nERIRys(t,qz1,qz2,qz3,qz4,a12,a34,z1,z2,z3,z4,Pz,Qz)
             aERI += nAngFacX * nAngFacY * nAngFacZ * weights[i]
     else:
-        aERI = ChebGausInt(1E-12,50000, a12, a34, qx1, qx2, qx3, qx4,
+        aERI = ChebGausInt(1E-14,50000, a12, a34, qx1, qx2, qx3, qx4,
                            qy1, qy2, qy3,  qy4, qz1, qz2, qz3,qz4, x1,
                            x2,  x3, x4,  y1,  y2,  y3, y4, z1,  z2,  z3,
                            z4,  Px, Py, Pz, Qx, Qy, Qz, T)
@@ -360,7 +360,7 @@ cdef void Root123(int n,double X)nogil:
                       6.40994113129432E-04 )*X+3.78787044215009E-03 )*X-
                     1.85185172458485E-02 )*X+7.14285713298222E-02 )*X-
                   1.99999999997023E-01 )*X+3.33333333333318E-01
-            WW1 = (X+X)*F1+exp(-X)
+            WW1 = (X+X) * F1 + exp(-X)
             RT1 = F1 / (WW1-F1)
 
             roots[0] = RT1
@@ -436,8 +436,8 @@ cdef void Root123(int n,double X)nogil:
                       1.16740298039895E-04 )*Y+7.24888732052332E-04 )*Y-
                     3.79490003707156E-03 )*Y+1.61723488664661E-02 )*Y-
                   5.29428148329736E-02 )*Y+1.15702180856167E-01
-            WW1 = (X+X)*F1+exp(-X)
-            RT1 = F1/(WW1-F1)
+            WW1 = (X + X)*F1 + exp(-X)
+            RT1 = F1 / (WW1 - F1)
             roots[0] = RT1
             weights[0] = WW1
             

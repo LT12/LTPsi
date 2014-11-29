@@ -15,7 +15,7 @@ def _SCFEnergy(mol,cart,m,d,b):
 
 def _calcDer(mol,i,j,m,d,b):
 
-    dx = 1E-8
+    dx = 1E-10
 
     cart = mol.cartMatrix
     cart1 = np.copy(cart)
@@ -40,36 +40,36 @@ def _calcGrad(mol,m,d,b):
 
     return Grad
 
-def Optimize(mol,m=False,d=False,basis=""):
+def Optimize(mol, MP2 = False, d = False, basis = "STO3G"):
 
     cartNew = np.copy(mol.cartMatrix)
     cartOld = np.zeros(np.shape(cartNew))
     cartList = []
-    precesion = 0.00001
-    eps = 2
+    precesion = 1E-5
+    eps = 1
     grad=5
     
     while sp.linalg.norm(grad) > precesion:
         cartOld = cartNew
-        grad = _calcGrad(mol,m,d,basis)
+        grad = _calcGrad(mol,MP2,d,basis)
         print sp.linalg.norm(grad)
         cartNew = cartOld - eps*grad
         mol.cartMatrix = cartNew
         cartList.append(cartNew)
-        eps = _LS(mol,m,d,basis,e=eps)
+        eps = _LS(mol,MP2,d,basis,e=eps)
         print eps
 
     return cartList
 
 def _LS(mol,m,d,bs,e=1):
     
-    j,c,b = 0,0.1,0.75
+    j,c,b = 0,0.4,0.8
     cart = mol.cartMatrix
-    grad = calcGrad(mol,m,d,bs)
+    grad = _calcGrad(mol,m,d,bs)
     norm2 = sp.linalg.norm(grad)**2
     
-    while (SCFEnergy(mol,cart,m,d,bs) - 
-                        SCFEnergy(mol,cart-e*grad,m,d,bs) <= c*e*norm2):
+    while (_SCFEnergy(mol,cart,m,d,bs) - 
+                        _SCFEnergy(mol,cart-e*grad,m,d,bs) <= c*e*norm2):
         e *= b
         
     return e

@@ -14,9 +14,9 @@
 
 __PYX_EXTERN_C DL_IMPORT(double) roots[5];
 __PYX_EXTERN_C DL_IMPORT(double) weights[5];
-__PYX_EXTERN_C DL_IMPORT(double) sRysN[6];
-__PYX_EXTERN_C DL_IMPORT(double) sRys[6][6];
-__PYX_EXTERN_C DL_IMPORT(double) Sa0[10];
+__PYX_EXTERN_C DL_IMPORT(double) sRysN[10];
+__PYX_EXTERN_C DL_IMPORT(double) sRys[10][10];
+__PYX_EXTERN_C DL_IMPORT(double) Sa0[20];
 
 #endif /* !__PYX_HAVE_API__CprimMolInt */
 

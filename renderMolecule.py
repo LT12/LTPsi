@@ -41,14 +41,14 @@ class renderMolecule():
 		          0,1,0)  # the Up-Vector
 #		glutMouseFunc(mouse)
 #		glutMotionFunc(motion)
-#		glutSpecialFunc(keyboardListener)
+		glutSpecialFunc(keyboardListener)
 		glEnable(GL_LIGHT0)
 		glutDisplayFunc(self.display)
 		glMatrixMode(GL_PROJECTION)
 		gluPerspective(40.,1.,1.,40.)
 		glMatrixMode(GL_MODELVIEW)
 		glPushMatrix()
-#		glutMainLoop()
+		glutMainLoop()
 		return
 
 	def display(self):
@@ -87,10 +87,10 @@ class renderMolecule():
 						gluCylinder(quadric,.08,.08,norm,20,20)
 						glPopMatrix()
 						
-#			glTranslatef(posX,posY,0)	
+			glTranslatef(posX,posY,0)	
 			glutSwapBuffers()
 			glFlush()
-#			time.sleep(0.1)
+			time.sleep(0.1)
 		
 		return
 

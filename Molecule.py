@@ -100,7 +100,7 @@ class Molecule():
 
         for i in xrange(self.numAtom):
             for j in xrange(i + 1):
-				
+                
                 dist = self.cartMatrix[i,:] - self.cartMatrix[j,:]
                 self.distanceMatrix[i,j] = np.sqrt(dist.dot(dist))
                 self.distanceMatrix[j,i] = self.distanceMatrix[i,j]
@@ -124,7 +124,7 @@ class Molecule():
 
     def compMolecularMass(self):
         AtomicMasses = [getAtomicMass(self.atomType[i])
-										  for i in xrange(self.numAtom)]
+                                          for i in xrange(self.numAtom)]
         self.molecularMass = sum(self.isotopeDiff) + sum(AtomicMasses)
 
     def compCenterofMass(self):
@@ -136,7 +136,12 @@ class Molecule():
 
         self.CenterofMass /= self.molecularMass
         self.cartMatrix -= self.CenterofMass
-
+    
+    def toBohr(self):
+        
+        self.cartMatrix *= 1.889725989
+        self.compDistanceMatrix(self.cartMatrix, self.bondMatrix,
+                                self.numBond, self.numAtom)
     #-------------------------------------------------------#
     #                   Molecule Properties                 #
     #-------------------------------------------------------#
@@ -190,3 +195,12 @@ class Molecule():
     @property
     def CenterofMass(self):
         return self.CenterofMass
+
+    @property
+    def molecularFormula(self):
+        return self.molecularFormula
+
+    @property
+    def num_e(self):
+        return  sum([getAtomicCharge(atom) for atom in self.atomType])\
+                    -self.molecularCharge
