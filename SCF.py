@@ -148,8 +148,8 @@ class SCF():
             for i in xrange(self.numAtom):
                 for j in xrange(i):
 
-                    R_ij =  self.cartMatrix[i,:] - self.cartMatrix[j,:]
-                    nR_ij = np.sqrt(np.dot(R_ij,R_ij))
+                    r_i, r_j =  self.cartMatrix[i,:], self.cartMatrix[j,:]
+                    nR_ij = np.sqrt(sp.dot(R_ij,R_ij))
 
                     Z_iZ_j = Z(self.atomType[i]) * Z(self.atomType[j])
 
