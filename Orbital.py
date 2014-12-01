@@ -27,6 +27,9 @@ class Orbital(object):
     '''
     A class containing position and coefficient information on
     Contracted Gaussian-Type Orbitals (CGTO)
+    
+    Orbital i centered on atom A with nuclear coordinates (X_A,Y_A,Z_A):
+    φ_i,A = [(x - X_A)^n_i * (y - Y_A)^m_i * (z - Z_A)^L_i] * Σ d_j * exp(-a_j * (x^2 + y^2 + z^2) )
     '''
 
     def __init__(self, orbData, center, atom):
