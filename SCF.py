@@ -90,7 +90,8 @@ class SCF():
         if basis == "STO3G":     from basis import STO3G   as bs
         elif basis == "STO6G":   from basis import STO6G   as bs
         elif basis == "6-31G":   from basis import b631G   as bs
-        elif basis == "3-21G":   from basis import b621G   as bs
+        elif basis == "3-21G":   from basis import b321G   as bs
+        elif basis == "6-31G*": from basis import b631Gs as bs
         elif basis == "6-31G**": from basis import b631Gss as bs
         elif basis == "6-31++G": from basis import b631ppG as bs
         elif basis == "6-311G":  from basis import b6311G  as bs
@@ -149,7 +150,7 @@ class SCF():
                 for j in xrange(i):
 
                     r_i, r_j =  self.cartMatrix[i,:], self.cartMatrix[j,:]
-                    nR_ij = np.sqrt(sp.dot(R_ij,R_ij))
+                    nR_ij = np.sqrt(sp.dot(r_i - r_j,r_i - r_j))
 
                     Z_iZ_j = Z(self.atomType[i]) * Z(self.atomType[j])
 
@@ -250,7 +251,7 @@ class SCF():
     def compElectronicEnergy(self, Fock):
         #Compute SCF electronic energy, sum(sum( D * (H + F) ) )
         self.ElectrEnergy = np.einsum('ij,ij', self.densityM,
-											   self.CoreHam + Fock)
+							    self.CoreHam + Fock)
                                                
     def compErrorMatrix(self):
         #Compute error matrix FDS - SDF (since D and F should commute)
