@@ -7,10 +7,16 @@ import numpy as np
 from atomicParam import *
 from math import sqrt, pi, acos
 import itertools
+from scipy.constants import physical_constants
 
 class Molecule():
 
-    def __init__(self, molFile):
+    def __init__(self, molFile, units = 'bohr'):
+        
+        if units != 'bohr' and units != 'angstrom':
+            raise NameError('Invalid unit selection')
+        
+        self.units = units
 
         self.readMolFile(molFile)
         self.compDistanceMatrix()
@@ -138,10 +144,16 @@ class Molecule():
         self.cartMatrix -= self.CenterofMass
     
     def toBohr(self):
-        
-        self.cartMatrix *= 1.889725989
-        self.compDistanceMatrix(self.cartMatrix, self.bondMatrix,
-                                self.numBond, self.numAtom)
+        if self.units == 'angstrom':
+            self.cartMatrix /= (physical_constants['Bohr radius'][0] * 1E+10)
+            self.units = 'bohr'
+            self.compDistanceMatrix()
+            
+    def toAngstrom(self):
+        if self.units == 'bohr':
+            self.cartMatrix *= (physical_constants['Bohr radius'][0] * 1E+10)
+            self.units = 'angstrom'
+            self.compDistanceMatrix()
     #-------------------------------------------------------#
     #                   Molecule Properties                 #
     #-------------------------------------------------------#
@@ -153,8 +165,7 @@ class Molecule():
     @cartMatrix.setter
     def cartMatrix(self,cartMatrix):
         self.cartMatrix = cartMatrix
-        self.compDistanceMatrix(self.cartMatrix, self.bondMatrix,
-                                self.numBond, self.numAtom)
+        self.compDistanceMatrix()
     @property
     def atomType(self):
         return self.atomType

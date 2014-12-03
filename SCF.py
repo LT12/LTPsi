@@ -213,9 +213,9 @@ class SCF():
         '''Construct symmetric orthogonalization matrix
         '''
 
-        eig,eigVM = eigh(self.OverlapMatrix,turbo = True)
+        eigs,eigVM = eigh(self.OverlapMatrix)#,turbo = True)
 
-        eigM = sp.diag(np.reciprocal(np.sqrt(eig)))
+        eigM = sp.diag(np.reciprocal(np.sqrt(eigs)))
 
         self.symS = sp.dot(eigVM,sp.dot(eigM,eigVM.T))
 
@@ -238,7 +238,7 @@ class SCF():
         #Transform Fock matrix into orthonormal AO basis
         self.transFockM = sp.dot(self.symS.T,Fock).dot(self.symS)
         #Solve Roothaan - Hall Equation
-        self.eig,eigVM = eigh(self.transFockM,turbo=True)
+        self.OrbE,eigVM = eigh(self.transFockM,turbo=True)
         #Transform AO coefficients back to non-orthogonal basis
         self.AOcoefs = sp.dot(self.symS,eigVM)
 
@@ -316,8 +316,8 @@ class SCF():
         #define N-number of orbitals, nOcc-number of occupied orbitals,
         #MOERT-ERT in MO basis, Orbenergy- energy of each orbital in
         #ordered manner, C-Matrix of AO coefficients
-        N,nOcc,MOERT,OrbEnergy,C = len(self.orbList),self.nOcc,\
-                                   np.copy(self.ERT),self.eig,\
+        N,nOcc,MOERT,OrbE,C = len(self.orbList),self.nOcc,\
+                                   np.copy(self.ERT),self.OrbE,\
                                    self.AOcoefs
 
         #Convert Electron Repulsion Tensor from AO basis to MO basis
@@ -333,8 +333,7 @@ class SCF():
 
             self.MP2Energy += MOERT[i,a,j,b] *\
                               (2 * MOERT[i,a,j,b] - MOERT[i,b,j,a])/\
-                              (OrbEnergy[i] + OrbEnergy[j]
-                               - OrbEnergy[a] - OrbEnergy[b])
+                              (OrbE[i] + OrbE[j] - OrbE[a] - OrbE[b])
 
         self.TotalEnergy += self.MP2Energy
 

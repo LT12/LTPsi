@@ -86,7 +86,7 @@ cdef double OL_Sab_terms(int q1,int q2,double a12,double AB,double PA)nogil:
      
     #S(a+b,0) -> S(a,b) using transfer relation  
     cdef double Sab = 0
-    for i in xrange(q2 + 1):
+    for i in xrange(q2+1):
 
         Sab += Sa0[q1+i] * binom(q2,i) * pow(AB,q2 - i)
         
