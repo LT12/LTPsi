@@ -18,7 +18,7 @@
 #  MA 02110-1301, USA.
 
 
-from CAuxFuncs import NormFac
+from cAuxFuncs import NormFac
 import numpy as np
 
 
@@ -29,7 +29,7 @@ class Orbital(object):
     Contracted Gaussian-Type Orbitals (CGTO)
     
     Orbital i centered on atom A with nuclear coordinates (X_A,Y_A,Z_A):
-    φ_i,A = [(x - X_A)^n_i * (y - Y_A)^m_i * (z - Z_A)^L_i] * Σ d_j * exp(-a_j * (x^2 + y^2 + z^2) )
+    phi_i,A = [(x - X_A)^n_i * (y - Y_A)^m_i * (z - Z_A)^L_i] * Sum d_j * exp(-a_j * (x^2 + y^2 + z^2) )
     '''
 
     def __init__(self, orbData, center, atom):
@@ -45,7 +45,7 @@ class Orbital(object):
         #Number of primitive Gaussians
         self.nPrim = len(self.a)
         #Contraction Coefficients
-        self.d = np.array([cof[1]*NormFac(cof[0], self.qnums[0],
+        self.d = np.array([cof[1] * NormFac(cof[0], self.qnums[0],
                           self.qnums[1], self.qnums[2]) for cof in
                           orbData[1]])
 

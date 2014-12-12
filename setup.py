@@ -4,10 +4,10 @@ import numpy
 
 setup(
     ext_modules=[
-        Extension("CprimMolInt", ["CprimMolInt.c"]),
-        Extension("CMolecularIntegrals", ["CMolecularIntegrals.c"],
+        Extension("cPrimMolInt", ["cPrimMolInt.c"]),
+        Extension("cMolecularIntegrals", ["cMolecularIntegrals.c"],
         include_dirs=[numpy.get_include()]),
-        Extension("CAuxFuncs", ["CAuxFuncs.c"],),
+        Extension("cAuxFuncs", ["cAuxFuncs.c"],),
         
     ],
 )

@@ -3,14 +3,15 @@ Created on Sep 28, 2014
 
 @author: Larry
 '''
-
+from __future__ import division
 import numpy as np
 import scipy as sp
 from scipy.linalg import eigh
 from atomicParam import *
-from CMolecularIntegrals import MolecularIntegrals
+from cMolecularIntegrals import MolecularIntegrals
 from Orbital import Orbital
 import itertools, time, warnings
+from numpy.linalg.linalg import LinAlgError
 
 
 class SCF():
@@ -34,7 +35,7 @@ class SCF():
 
         if mol.num_e % 2:
             raise NameError("RHF only works on even electrons systems!")
-        self.nOcc = mol.num_e /2
+        self.nOcc = mol.num_e // 2
 
         #number of atoms in system
         self.numAtom = len(self.atomType)
@@ -154,7 +155,7 @@ class SCF():
 
                     Z_iZ_j = Z(self.atomType[i]) * Z(self.atomType[j])
 
-                    self.NuclRepEnergy += Z_iZ_j/nR_ij
+                    self.NuclRepEnergy += Z_iZ_j / nR_ij
 
     def SCF(self):
 
@@ -306,8 +307,11 @@ class SCF():
         b = np.zeros(N_B)
         b[N_B-1] = -1
         
-        #Solve B * c = b for c to determine extrapolation coefficents
-        cofs = np.linalg.solve(B,b)
+        try:
+            #Solve B * c = b for c to determine extrapolation coefficents
+            cofs = np.linalg.solve(B,b)
+        except LinAlgError:
+            return
         #Build new Fock matrix with coefficients
         self.FockM = np.sum(cofs[:N_B-1] * self._fockList[:N_B-1])
 
