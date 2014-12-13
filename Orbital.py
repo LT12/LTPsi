@@ -32,12 +32,14 @@ class Orbital(object):
     phi_i,A = [(x - X_A)^n_i * (y - Y_A)^m_i * (z - Z_A)^L_i] * Sum d_j * exp(-a_j * (x^2 + y^2 + z^2) )
     '''
 
-    def __init__(self, orbData, center, atom):
+    def __init__(self, orbData, center, atom, charge):
 
         #Atom identity
         self.atom = atom
+        #Atom Charge
+        self.z = charge
         #Carteisian center of orbital
-        self.Center = center
+        self.center = center
         #angular momentum numbers
         self.qnums = getAngMom(orbData[0])
         #exponential coefficients
@@ -54,12 +56,12 @@ class Orbital(object):
     ####################################################################
 
     @property
-    def Center(self):
-        return self._Center
+    def center(self):
+        return self._center
 
-    @Center.setter
-    def Center(self, cent):
-        self._Center = cent
+    @center.setter
+    def center(self, cent):
+        self._center = cent
 
     @property
     def qnums(self):
