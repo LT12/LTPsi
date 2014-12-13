@@ -1,6 +1,6 @@
 # ! /bin/bash
 
-cython CprimMolInt.pyx
-cython CAuxFuncs.pyx
-cython CMolecularIntegrals.pyx
-python setup.py build_ext --inplace
+cython2 cPrimMolInt.pyx
+cython2 cAuxFuncs.pyx
+cython2 cMolecularIntegrals.pyx
+python2 setup.py build_ext --inplace
