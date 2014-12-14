@@ -36,8 +36,6 @@ class Orbital(object):
 
         #Atom identity
         self.atom = atom
-        #Atom Charge
-        self.z = charge
         #Carteisian center of orbital
         self.center = center
         #angular momentum numbers

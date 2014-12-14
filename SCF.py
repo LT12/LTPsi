@@ -8,16 +8,16 @@ import numpy as np
 import scipy as sp
 from scipy.linalg import eigh
 from atomicParam import *
-from cMolecularIntegrals import MolecularIntegrals
+import MolecularIntegrals
 from Orbital import Orbital
 import itertools, time, warnings
 from numpy.linalg.linalg import LinAlgError
 
 
 class SCF():
-    '''
+    """
     Restriced Hatree-Fock SCF Algorithm
-    '''
+    """
 
     def __init__(self, mol, basis = "STO3G", MP2 = False,
                  dipole = False, cartMatrix = None):
@@ -30,8 +30,8 @@ class SCF():
         else:
             self.cartMatrix = cartMatrix
 
-        #Calculate number of occupied orbitals and raise an execption
-        #for odd # of e-
+        # Calculate number of occupied orbitals and raise an execption
+        # for odd # of e-
 
         if mol.num_e % 2:
             raise NameError("RHF only works on even electrons systems!")
@@ -315,31 +315,6 @@ class SCF():
         #Build new Fock matrix with coefficients
         self.FockM = np.sum(cofs[:N_B-1] * self._fockList[:N_B-1])
 
-    def MP2(self):
-
-        #define N-number of orbitals, nOcc-number of occupied orbitals,
-        #MOERT-ERT in MO basis, Orbenergy- energy of each orbital in
-        #ordered manner, C-Matrix of AO coefficients
-        N,nOcc,MOERT,OrbE,C = len(self.orbList),self.nOcc,\
-                                   np.copy(self.ERT),self.OrbE,\
-                                   self.AOcoefs
-
-        #Convert Electron Repulsion Tensor from AO basis to MO basis
-        MOERT = np.einsum('ijkl, ls -> ijks',MOERT,C)
-        MOERT = np.einsum('ijks, kr -> ijrs',MOERT,C)
-        MOERT = np.einsum('ijrs, jq -> iqrs',MOERT,C)
-        MOERT = np.einsum('iqrs, ip -> pqrs',MOERT,C)
-
-        self.MP2Energy = 0
-
-        for i,j,a,b in itertools.product(xrange(nOcc),xrange(nOcc),
-                                         xrange(nOcc,N),xrange(nOcc,N)):
-
-            self.MP2Energy += MOERT[i,a,j,b] *\
-                              (2 * MOERT[i,a,j,b] - MOERT[i,b,j,a])/\
-                              (OrbE[i] + OrbE[j] - OrbE[a] - OrbE[b])
-
-        self.TotalEnergy += self.MP2Energy
 
     def DipoleMoments(self):
 
