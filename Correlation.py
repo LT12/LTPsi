@@ -3,7 +3,7 @@ import numpy as np
 from numba import jit
 
 @jit
-def MP2(ert, orb_e, ao_cof, n_occ, n_orb):
+def mp2(ert, orb_e, ao_cof, n_occ, n_orb):
     """Calculates the Moller-Plesset MP2 energy correction
 
     :param ert: electron repulsion tensor
@@ -22,11 +22,13 @@ def MP2(ert, orb_e, ao_cof, n_occ, n_orb):
 
     mp2_energy = 0
 
-    for i,j,a,b in itertools.product(xrange(nOcc),xrange(nOcc),
-                                     xrange(nOcc,N),xrange(nOcc,N)):
+    for i in xrange(n_occ):
+        for j in xrange(n_occ):
+            for a in xrange(n_occ, n_orb):
+                for b in xrange(n_occ, n_orb):
 
-        self.MP2Energy += MOERT[i,a,j,b] *\
-                          (2 * MOERT[i,a,j,b] - MOERT[i,b,j,a])/\
-                          (OrbE[i] + OrbE[j] - OrbE[a] - OrbE[b])
+                    mp2_energy += mo_ert[i,a,j,b] *\
+                                  (2 * mo_ert[i,a,j,b] - mo_ert[i,b,j,a])/\
+                                  (orb_e[i] + orb_e[j] - orb_e[a] - orb_e[b])
 
     return mp2_energy
