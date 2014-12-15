@@ -1,0 +1,57 @@
+.. LTPsi documentation master file, created by
+   sphinx-quickstart on Sun Dec 14 23:01:18 2014.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to LTPsi's documentation!
+=================================
+Restricted Hartree-Fock Quantum Chemistry Suite
+
+Page in construction currently
+
+Requirements:
+
+- Python 2.7
+
+- Numpy 1.6.0 or better
+
+- Scipy 1.0.0 or better
+
+- Numba
+
+- C compiler (GCC or mingw32)
+
+Optional Requirements for Additional Modules:
+
+- Cython
+
+- Ipython
+
+- Matplotlib
+
+- Mayavai2
+
+- VPython
+
+Additionally, it is recommended that Numpy/Scipy are linked to
+either OpenBLAS, Intel MKL, ACML, or ATLAS
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+   includeme
+   tutorial
+   project
+   code
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+

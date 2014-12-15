@@ -1,0 +1,8 @@
+Project Summary
+===============
+
+Goals
+-----
+Develop a complete computational chemistry suite in Python
+using Numpy, Scipy, Cython, Numba, to ensure speed and code
+readability
