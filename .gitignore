@@ -2,5 +2,9 @@
 *.pyc
 *.log
 *.csv
+*.png
+*.mtl
+*.obj
+.ipynb_checkpoints
 build/
 *.html

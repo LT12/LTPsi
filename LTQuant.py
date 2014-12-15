@@ -4,7 +4,7 @@ Created on Feb 20, 2014
 '''
 from Molecule import Molecule
 from RotationalParam import RotationalParam
-from SCF import SCF
+from scf import SCF
 import numpy as np
 
 

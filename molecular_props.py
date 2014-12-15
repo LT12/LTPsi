@@ -43,3 +43,42 @@ def calc_nucl_repulsion(atom_charge, cart_matrix):
                 nuc_repl += z_ij / r_ij
 
     return nuc_repl
+
+'''
+def DipoleMoments(self):
+
+    MuX_e = 2 * np.einsum('ij,ij', self.densityM, self.XDipoleMatrix)
+    MuY_e = 2 * np.einsum('ij,ij', self.densityM, self.YDipoleMatrix)
+    MuZ_e = 2 * np.einsum('ij,ij', self.densityM, self.ZDipoleMatrix)
+
+    MuX_N, MuY_N, MuZ_N = 0, 0, 0
+    Z = getAtomicCharge
+    if self.numAtom > 1:
+        for i in enumerate(self.atomType):
+            MuX_N += Z(i[1]) * self.cartMatrix[i[0], 0]
+            MuY_N += Z(i[1]) * self.cartMatrix[i[0], 1]
+            MuZ_N += Z(i[1]) * self.cartMatrix[i[0], 2]
+
+    MuX = MuX_e + MuX_N
+    MuY = MuY_e + MuY_N
+    MuZ = MuZ_e + MuZ_N
+
+    self.DipoleMoments = [MuX, MuY, MuZ]
+
+def MullikenPopulation(self):
+
+    self.MullCharges = [0] * self.numAtom
+    Z = getAtomicCharge
+
+    # Gross Orbital Product
+    GOP = -2 * np.einsum('ij,ij->i', self.densityM,
+                         self.OverlapMatrix)
+
+    for i in xrange(self.numAtom):
+        q = Z(self.atomType[i])
+
+        for j in enumerate(self.orbList):
+            if j[1].atom == i: q += GOP[j[0]]
+
+        self.MullCharges[i] = q
+'''

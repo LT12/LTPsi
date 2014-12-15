@@ -5,7 +5,7 @@ Created on Nov 9, 2014
 
 '''
 from __future__ import print_function
-from SCF import SCF
+from scf import SCF
 import numpy as np
 import scipy as sp
 
