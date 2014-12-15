@@ -6,12 +6,23 @@ from numba import jit
 def mp2(ert, orb_e, ao_cof, n_occ, n_orb):
     """Calculates the Moller-Plesset MP2 energy correction
 
-    :param ert: electron repulsion tensor
-    :param orb_e: orbital energies
-    :param ao_cof: atomic orbital coefficents
-    :param n_occ: number of occupied orbitals
-    :param n_orb: number of orbitals
-    :return: mp2_energy: MP2 correction to energy
+    Parameters
+    ----------
+    ert : ndarray
+          two electron integral tensor (ij|kl)
+    orb_e : array-like
+            energy of the molecular orbitals for the system
+    ao_cof : ndarray
+            LCAO coefficents for the molecular orbitals
+    n_occ : int
+            number of occupied molecular orbitals
+    n_orb : int
+            total number of molecular orbitals for system
+
+    Returns
+    -------
+    mp2_energy : float
+                 MP2 correction to energy to account for correlation
     """
 
     # Convert Electron Repulsion Tensor from AO basis to MO basis

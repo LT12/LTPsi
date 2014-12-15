@@ -9,11 +9,20 @@ from numba import jit
 def overlap_matrix(orbs):
     """Generate matrix of overlap integrals between each atomic orbital
 
-        Arguments:
-        orbs - list of atomic orbitals for molecule
+        Parameters
+        ----------
+        orbs : array-like
+               list of atomic orbitals for molecule
 
-        Return:
-        overlap_m - Matrix of overlap integrals between all atomic orbitals
+        Returns
+        -------
+        overlap_m : ndarray
+                    matrix of overlap integrals between all atomic orbitals
+
+        Notes
+        -----
+        Since the overlap integral is Hermitian only the lower diagonal
+        portion of the matrix is calculated.
     """
 
     n = len(orbs)
@@ -29,13 +38,22 @@ def overlap_matrix(orbs):
 
 @jit
 def kinetic_matrix(orbs):
-    """Generate matrix of kinetic energy integrals
+    """Generate matrix of kinetic energy integrals between each atomic orbital
 
-        Arguments:
-        orbs - list of atomic orbitals for molecule
+        Parameters
+        ----------
+        orbs : array-like
+               list of atomic orbitals for molecule
 
-        Return:
-        kinetic_m - Matrix of overlap integrals between all atomic orbitals
+        Returns
+        -------
+        kinetic_m : ndarray
+                    matrix of kinetic energy integrals between all atomic orbitals
+
+        Notes
+        -----
+        Since the kinetic energy integral is Hermitian only the lower
+        portion of the matrix is calculated.
     """
 
     n = len(orbs)
@@ -53,10 +71,22 @@ def kinetic_matrix(orbs):
 def nuclear_matrix(orbs, cart_matrix, atom_charge):
     """Generate matrix of nuclear attraction energy integrals
 
-    :param orbs: list of atomic orbitals for molecule
-    :param cart_matrix: matrix of atomic coordinates
-    :param atom_charge: list of nuclear charges for each atom
-    :return: nuclear_m: matrix of nuclear attraction integrals
+    Parameters
+    ----------
+    orbs : array-like
+           list of atomic orbitals for molecule
+    cart_matrix : ndarray
+                  matrix of atomic coordinates
+    atom_charge : array-like
+                  list of nuclear charges for each atom
+    Returns
+    -------
+    nuclear_m : ndarray
+                matrix of nuclear attraction integral
+    Notes
+    -----
+    Since the nuclear attraction integral is Hermitian, only the lower
+    portion of the matrix is calculated.
     """
 
     n = len(orbs)
@@ -75,10 +105,18 @@ def nuclear_matrix(orbs, cart_matrix, atom_charge):
 def coreham_matrix(orbs, cart_matrix, atom_charge):
     """Generate one-electron core Hamiltonian matrix
 
-    :param orbs: list of atomic orbitals for molecule
-    :param cart_matrix: matrix of atomic coordinates
-    :param atom_charge: list of nuclear charges for each atom
-    :return: coreham_m: core Hamiltonian matrix
+    Parameters
+    ----------
+    orbs : array-like
+           list of atomic orbitals for molecule
+    cart_matrix : ndarray
+                  matrix of atomic coordinates
+    atom_charge : array-like
+                  list of nuclear charges for each atom
+    Returns
+    -------
+    coreham_m : ndarray
+                core Hamiltonian matrix
     """
 
     coreham_m = nuclear_matrix(orbs) + kinetic_matrix(orbs, cart_matrix, atom_charge)
@@ -90,11 +128,24 @@ def coreham_matrix(orbs, cart_matrix, atom_charge):
 def two_electron_tensor(orbs):
     """Generate two-electron repulsion integral tensor
 
-        Arguments:
-        orbs - list of atomic orbitals for molecule
+    Parameters
+    ----------
+    orbs : array-like
+           list of atomic orbitals for molecule
 
-        Return:
-        ert - Matrix of overlap integrals between all atomic orbitals
+    Returns
+    -------
+    ert : ndarray
+          two electron integral rank 4 tensor
+
+    Notes
+    -----
+    The two electron repulsion tensor is a rank 4- tensor
+    meaning the ndarray has 4 indicies, e.g. ert[i,j,k,l].
+
+    The two electron integrals have 8-fold permutation
+    symmetry, so only the lower octet of the tensor is
+    calculated.
     """
 
     n = len(orbs)
@@ -130,7 +181,7 @@ def overlap_integral(orb1, orb2):
     integral = 0
     pol = primOverlapIntegral
 
-    nprim1, nprim2 = orb1.nPrim, orb2.nPrim  # number of primitive GTOs
+    nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
     x1, y1, z1 = orb1.qnums  # orbital 1 angular momenta
     x2, y2, z2 = orb2.qnums  # orbital 2 angular momenta
     d1, d2 = orb1.d, orb2.d  # contraction coefficients
@@ -160,7 +211,7 @@ def kinetic_integral(orb1, orb2):
     integral = 0
     pol = primOverlapIntegral
 
-    nprim1, nprim2 = orb1.nPrim, orb2.nPrim  # number of primitive GTOs
+    nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
     x1, y1, z1 = orb1.qnums  # orbital 1 angular momenta
     x2, y2, z2 = orb2.qnums  # orbital 2 angular momenta
     d1, d2 = orb1.d, orb2.d  # contraction coefficients
@@ -217,7 +268,7 @@ def nuclear_integral(orb1, orb2, cart_matrix, atom_charge):
     integral = 0
     nai = primNuclearAttractionIntegral
 
-    nprim1, nprim2 = orb1.nPrim, orb2.nPrim  # number of primitive GTOs
+    nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
     x1, y1, z1 = orb1.qnums  # orbital 1 angular momenta
     x2, y2, z2 = orb2.qnums  # orbital 2 angular momenta
     d1, d2 = orb1.d, orb2.d  # contraction coefficients
@@ -252,8 +303,8 @@ def two_electron_integral(orb1, orb2, orb3, orb4):
     integral = 0
     eri = primElecRepulInt
 
-    nprim1, nprim2 = orb1.nPrim, orb2.nPrim  # number of primitive GTOs
-    nprim3, nprim4 = orb3.nPrim, orb4.nPrim  # number of primitive GTOs
+    nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
+    nprim3, nprim4 = orb3.n_prim, orb4.n_prim  # number of primitive GTOs
     x1, y1, z1 = orb1.qnums  # orbital 1 angular momenta
     x2, y2, z2 = orb2.qnums  # orbital 2 angular momenta
     x3, y3, z3 = orb3.qnums  # orbital 3 angular momenta

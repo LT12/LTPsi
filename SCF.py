@@ -5,11 +5,12 @@ Created on Sep 28, 2014
 '''
 from __future__ import division
 import numpy as np
-import scipy as sp
+import scipy
 from scipy.linalg import eigh
-from atomicParam import *
-from MolecularIntegrals import *
-from orbital import Orbital
+from atomicparam import *
+from molecular_integrals import coreham_matrix, two_electron_tensor
+from molecular_props import calc_nucl_repulsion
+from orbital import det_orbs
 import itertools, time, warnings
 from numpy.linalg.linalg import LinAlgError
 
@@ -23,7 +24,7 @@ class SCF():
                  dipole=False, cart_matrix=None):
 
         # Introduce Molecular Parameters
-        self.atomType = mol.atomType
+        self.atom_type = mol.atom_type
 
         if cart_matrix is None:
             self.cart_matrix = mol.cart_matrix
@@ -38,14 +39,15 @@ class SCF():
         self.n_occ = mol.num_e // 2
 
         # number of atoms in system
-        self.num_atom = len(self.atomType)
+        self.num_atom = len(self.atom_type)
 
         # Calculate nuclear repulsion
-        self.calcNuclRepulsion()
+        self.nuclear_rep = calc_nucl_repulsion(self.atom_charge,
+                                               self.cart_matrix)
 
         # Determine basis set for molecule
-        self.detOrbList(basis)
-        self.n_orb = len(self.orbList)
+        self.orbs = det_orbs(basis, self.atom_type, self.cart_matrix)
+        self.n_orb = len(self.orbs)
 
         intTimeI = time.time()
 
@@ -66,7 +68,7 @@ class SCF():
 
         # If selected, perform Moller-Posset (MP2) correction
         if mp2:
-            from Correlation import mp2
+            from correlation import mp2
 
             self.mp2_energy = mp2(self.ert, self.orb_e,
                                   self.ao_cof, self.n_occ,
@@ -75,21 +77,6 @@ class SCF():
         # Calculate Mulliken Charges
         self.MullikenPopulation()
 
-
-    def calcNuclRepulsion(self):
-
-        self.NuclRepEnergy = 0
-        Z = getAtomicCharge
-
-        if self.numAtom > 1:
-            for i in xrange(self.numAtom):
-                for j in xrange(i):
-                    r_i, r_j = self.cartMatrix[i, :], self.cartMatrix[j, :]
-                    nR_ij = np.sqrt(sp.dot(r_i - r_j, r_i - r_j))
-
-                    Z_iZ_j = Z(self.atomType[i]) * Z(self.atomType[j])
-
-                    self.NuclRepEnergy += Z_iZ_j / nR_ij
 
     def SCF(self):
 

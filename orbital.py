@@ -1,7 +1,7 @@
-"""orbital.py contains the orbital class used for containing of the
+"""orbital.py contains the Orbital class used for containing of the
 attributes of a contracted Gaussian type orbital (GTO). Additionally,
 this modules contains functions for calculating normalization constants
-for orbitals (norm_const), angular quantum numbers (get_ang_mom), and
+for orbitals (NormFac), angular quantum numbers (get_ang_mom), and
 generating a list of orbital object for a given molecule and basis set
 (det_orbs).
 """
@@ -32,7 +32,7 @@ import numpy as np
 from importlib import import_module
 
 
-class orbital(object):
+class Orbital(object):
     """
     A class containing position and coefficient information on
     Contracted Gaussian-Type Orbitals (CGTO)
@@ -46,8 +46,9 @@ class orbital(object):
     atom : int
            number of the atom on which of the orbital is centered on
 
-    
-    .. note:: Orbital i centered on atom A with nuclear coordinates (X_A,Y_A,Z_A)
+    Notes
+    -----
+    Orbital i centered on atom A with nuclear coordinates (X_A,Y_A,Z_A)
 
     .. math::
     \phi_{i,A} = [(x - X_A)^n_i * (y - Y_A)^m_i * (z - Z_A)^L_i] * \sum_j d_j * e^(-a_j * (x^2 + y^2 + z^2) )
@@ -64,7 +65,7 @@ class orbital(object):
         # exponential coefficients
         self.a = np.array([cof[0] for cof in orb_data[1]])
         # Number of primitive Gaussians
-        self.nPrim = len(self.a)
+        self.n_prim = len(self.a)
         # Contraction Coefficients
         self.d = np.array([cof[1] * NormFac(cof[0], self.qnums[0],
                                             self.qnums[1], self.qnums[2]) for cof in
@@ -95,24 +96,24 @@ class orbital(object):
         return self._a
 
     @a.setter
-    def a(self, aL):
-        self._a = aL
+    def a(self, a_l):
+        self._a = a_l
 
     @property
     def d(self):
         return self._d
 
     @d.setter
-    def d(self, dL):
-        self._d = dL
+    def d(self, d_l):
+        self._d = d_l
 
     @property
-    def nPrim(self):
-        return self._nPrim
+    def n_prim(self):
+        return self._n_prim
 
-    @nPrim.setter
-    def nPrim(self, nP):
-        self._nPrim = nP
+    @n_prim.setter
+    def n_prim(self, n_p):
+        self._n_prim = n_p
 
 
 def get_ang_mom(ang_mom):
@@ -127,6 +128,11 @@ def get_ang_mom(ang_mom):
     -------
     tuple
           3 angular quantum numbers for each Cartesian direction
+
+    Raises
+    ------
+    KeyError
+            if invalid angular momentum is used
     """
     ang_mom_dict = {"S": (0, 0, 0),
                     "PX": (1, 0, 0),  "PY": (0, 1, 0),   "PZ": (0, 0, 1),
@@ -164,7 +170,18 @@ def det_orbs(basis, atom_type, cart_matrix):
     num_prim : int
                total number of primitive GTOs in system
 
-    .. note:: basis sets can be added by adding to 'basis_sets'
+    Notes
+    -----
+    basis sets can be added by adding an entry
+    to 'basis_sets' dictionary. The key should
+    be the name of the basis set, while the value
+    should be the name of the python module
+    containing the basis set.
+
+    Raises
+    ------
+    KeyError
+            if an invalid basis set is chosen
     """
 
     basis_sets = {"STO3G": "STO3G", "STO6G": "STO6G", "3-21G": "b321G",
@@ -187,26 +204,26 @@ def det_orbs(basis, atom_type, cart_matrix):
         n = len(orb)
         for j in xrange(n):
             if orb[j][0] == "S":
-                append(orbital(orb[j], cart_matrix[i, :], i))
+                append(Orbital(orb[j], cart_matrix[i, :], i))
             elif orb[j][0] == "P":
-                append(orbital(("PX", orb[j][1]),
+                append(Orbital(("PX", orb[j][1]),
                                cart_matrix[i, :], i))
-                append(orbital(("PY", orb[j][1]),
+                append(Orbital(("PY", orb[j][1]),
                                cart_matrix[i, :], i))
-                append(orbital(("PZ", orb[j][1]),
+                append(Orbital(("PZ", orb[j][1]),
                                cart_matrix[i, :], i))
             elif orb[j][0] == "D":
-                append(orbital(("DX2", orb[j][1]),
+                append(Orbital(("DX2", orb[j][1]),
                                cart_matrix[i, :], i))
-                append(orbital(("DY2", orb[j][1]),
+                append(Orbital(("DY2", orb[j][1]),
                                cart_matrix[i, :], i))
-                append(orbital(("DZ2", orb[j][1]),
+                append(Orbital(("DZ2", orb[j][1]),
                                cart_matrix[i, :], i))
-                append(orbital(("DXZ", orb[j][1]),
+                append(Orbital(("DXZ", orb[j][1]),
                                cart_matrix[i, :], i))
-                append(orbital(("DXY", orb[j][1]),
+                append(Orbital(("DXY", orb[j][1]),
                                cart_matrix[i, :], i))
-                append(orbital(("DYZ", orb[j][1]),
+                append(Orbital(("DYZ", orb[j][1]),
                                cart_matrix[i, :], i))
             else:
                 print (orb[j][0])
