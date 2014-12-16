@@ -51,8 +51,168 @@
             
   <div class="section" id="ltpsi-source-code-documentation">
 <h1>LTPsi Source Code Documentation<a class="headerlink" href="#ltpsi-source-code-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-c_molecular_integrals">
+<span id="molecule"></span><h2>molecule<a class="headerlink" href="#module-c_molecular_integrals" title="Permalink to this headline">¶</a></h2>
+<p>cython version of moleculer_integrals</p>
+<dl class="function">
+<dt id="c_molecular_integrals.coreham_matrix">
+<tt class="descclassname">c_molecular_integrals.</tt><tt class="descname">coreham_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#c_molecular_integrals.coreham_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate one-electron core Hamiltonian matrix</p>
+<blockquote>
+<div><div class="math">
+\[H_{core} = KI + NAI\]</div>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
+<blockquote>
+<div><p>list of atomic orbitals for molecule</p>
+</div></blockquote>
+<p><strong>cart_matrix</strong> : ndarray</p>
+<blockquote>
+<div><p>matrix of atomic coordinates</p>
+</div></blockquote>
+<p><strong>atom_charge</strong> : array-like</p>
+<blockquote>
+<div><p>list of nuclear charges for each atom</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>coreham_m</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>core Hamiltonian matrix</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="c_molecular_integrals.kinetic_matrix">
+<tt class="descclassname">c_molecular_integrals.</tt><tt class="descname">kinetic_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#c_molecular_integrals.kinetic_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate matrix of kinetic energy integrals between each atomic orbital</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
+<blockquote>
+<div><p>list of atomic orbitals for molecule</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>kinetic_m</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>matrix of kinetic energy integrals between all atomic orbitals</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Since the kinetic energy integral is Hermitian only the lower
+portion of the matrix is calculated.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c_molecular_integrals.nuclear_matrix">
+<tt class="descclassname">c_molecular_integrals.</tt><tt class="descname">nuclear_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#c_molecular_integrals.nuclear_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate matrix of nuclear attraction energy integrals</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
+<blockquote>
+<div><p>list of atomic orbitals for molecule</p>
+</div></blockquote>
+<p><strong>cart_matrix</strong> : ndarray</p>
+<blockquote>
+<div><p>matrix of atomic coordinates</p>
+</div></blockquote>
+<p><strong>atom_charge</strong> : array-like</p>
+<blockquote>
+<div><p>list of nuclear charges for each atom</p>
+</div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>nuclear_m</strong> : ndarray</p>
+<blockquote>
+<div><p>matrix of nuclear attraction integral</p>
+</div></blockquote>
+<p><strong>Notes</strong></p>
+<p><strong>&#8212;&#8211;</strong></p>
+<p><strong>Since the nuclear attraction integral is Hermitian, only the lower</strong></p>
+<p class="last"><strong>portion of the matrix is calculated.</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="c_molecular_integrals.overlap_matrix">
+<tt class="descclassname">c_molecular_integrals.</tt><tt class="descname">overlap_matrix</tt><big>(</big><big>)</big><a class="headerlink" href="#c_molecular_integrals.overlap_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate matrix of overlap integrals between each atomic orbital</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
+<blockquote>
+<div><p>list of atomic orbitals for molecule</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>overlap_m_v</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>matrix of overlap integrals between all atomic orbitals</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Since the overlap integral is Hermitian only the lower diagonal
+portion of the matrix is calculated.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="c_molecular_integrals.two_electron_tensor">
+<tt class="descclassname">c_molecular_integrals.</tt><tt class="descname">two_electron_tensor</tt><big>(</big><big>)</big><a class="headerlink" href="#c_molecular_integrals.two_electron_tensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate two-electron repulsion integral tensor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
+<blockquote>
+<div><p>list of atomic orbitals for molecule</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ert</strong> : ndarray</p>
+<blockquote class="last">
+<div><p>two electron integral rank 4 tensor</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The two electron repulsion tensor is a rank 4- tensor
+meaning the ndarray has 4 indicies, e.g. ert[i,j,k,l].</p>
+<p>The two electron integrals have 8-fold permutation
+symmetry, so only the lower octet of the tensor is
+calculated.</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-molecule">
-<span id="molecule"></span><h2>molecule<a class="headerlink" href="#module-molecule" title="Permalink to this headline">¶</a></h2>
+<span id="molecular-integrals"></span><h2>molecular_integrals<a class="headerlink" href="#module-molecule" title="Permalink to this headline">¶</a></h2>
 <p>molecule.py contains the Molecule class which creates the molecule
 object. A object containing all of the attributes prescribed to
 a molecule, including coordinates for each atom, identity of each atom,
@@ -139,312 +299,6 @@ which may lead to unexpected results or program crash.</p>
 <dd><p>Convert units for coordinate system to Bohrs</p>
 </dd></dl>
 
-</dd></dl>
-
-</div>
-<div class="section" id="module-molecular_integrals">
-<span id="molecular-integrals"></span><h2>molecular_integrals<a class="headerlink" href="#module-molecular_integrals" title="Permalink to this headline">¶</a></h2>
-<p>moleculer_integrals</p>
-<dl class="attribute">
-<dt id="molecular_integrals.coreham_matrix">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">coreham_matrix</tt><a class="reference internal" href="_modules/molecular_integrals.html#coreham_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.coreham_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate one-electron core Hamiltonian matrix</p>
-<blockquote>
-<div><div class="math">
-\[H_{core} = KI + NAI\]</div>
-</div></blockquote>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
-<blockquote>
-<div><p>list of atomic orbitals for molecule</p>
-</div></blockquote>
-<p><strong>cart_matrix</strong> : ndarray</p>
-<blockquote>
-<div><p>matrix of atomic coordinates</p>
-</div></blockquote>
-<p><strong>atom_charge</strong> : array-like</p>
-<blockquote>
-<div><p>list of nuclear charges for each atom</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>coreham_m</strong> : ndarray</p>
-<blockquote class="last">
-<div><p>core Hamiltonian matrix</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.kinetic_integral">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">kinetic_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#kinetic_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.kinetic_integral" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate kinetic energy integral between 2 atomic orbitals</p>
-<blockquote>
-<div><div class="math">
-</div>
-</div></blockquote>
-<p>rac{1}{2} &lt; psi_ i |
-abla^2 | psi_j &gt;</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
-<blockquote>
-<div><blockquote>
-<div><p>orbital object, atomic orbital 1</p>
-</div></blockquote>
-<dl class="docutils">
-<dt>orb2 <span class="classifier-delimiter">:</span> <span class="classifier">object</span></dt>
-<dd><p class="first last">orbital object, atomic orbital 2</p>
-</dd>
-</dl>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
-<blockquote class="last">
-<div><p>kinetic energy integral (KI)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.kinetic_matrix">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">kinetic_matrix</tt><a class="reference internal" href="_modules/molecular_integrals.html#kinetic_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.kinetic_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate matrix of kinetic energy integrals between each atomic orbital</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
-<blockquote>
-<div><p>list of atomic orbitals for molecule</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>kinetic_m</strong> : ndarray</p>
-<blockquote class="last">
-<div><p>matrix of kinetic energy integrals between all atomic orbitals</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Notes</p>
-<p>Since the kinetic energy integral is Hermitian only the lower
-portion of the matrix is calculated.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.nuclear_integral">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">nuclear_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#nuclear_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.nuclear_integral" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate nuclear attraction integral between 2 atomic orbitals</p>
-<blockquote>
-<div><div class="math">
-\[\begin{split}&lt; \psi_ i |\sum_N \end{split}\]</div>
-</div></blockquote>
-<p>rac{-1}{r_N}|psi_j &gt;</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
-<blockquote>
-<div><blockquote>
-<div><p>orbital object, atomic orbital 1</p>
-</div></blockquote>
-<dl class="docutils">
-<dt>orb2 <span class="classifier-delimiter">:</span> <span class="classifier">object</span></dt>
-<dd><p class="first last">orbital object, atomic orbital 2</p>
-</dd>
-<dt>cart_matrix <span class="classifier-delimiter">:</span> <span class="classifier">float[:,:]</span></dt>
-<dd><p class="first last">matrix with Cartesian coordinates for each atom</p>
-</dd>
-<dt>atom_charge <span class="classifier-delimiter">:</span> <span class="classifier">array-like</span></dt>
-<dd><p class="first last">list of nuclear charges for each atom</p>
-</dd>
-</dl>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
-<blockquote class="last">
-<div><p>nuclear attraction integral (NAI)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.nuclear_matrix">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">nuclear_matrix</tt><a class="reference internal" href="_modules/molecular_integrals.html#nuclear_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.nuclear_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate matrix of nuclear attraction energy integrals</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
-<blockquote>
-<div><p>list of atomic orbitals for molecule</p>
-</div></blockquote>
-<p><strong>cart_matrix</strong> : ndarray</p>
-<blockquote>
-<div><p>matrix of atomic coordinates</p>
-</div></blockquote>
-<p><strong>atom_charge</strong> : array-like</p>
-<blockquote>
-<div><p>list of nuclear charges for each atom</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
-<p><strong>nuclear_m</strong> : ndarray</p>
-<blockquote>
-<div><p>matrix of nuclear attraction integral</p>
-</div></blockquote>
-<p><strong>Notes</strong></p>
-<p><strong>&#8212;&#8211;</strong></p>
-<p><strong>Since the nuclear attraction integral is Hermitian, only the lower</strong></p>
-<p class="last"><strong>portion of the matrix is calculated.</strong></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.overlap_integral">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">overlap_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#overlap_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.overlap_integral" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate overlap integral between 2 atomic orbitals</p>
-<div class="math">
-\[\begin{split}&lt; \psi_ i | \psi_j &gt;\end{split}\]</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
-<blockquote>
-<div><p>orbital object, atomic orbital 1</p>
-</div></blockquote>
-<p><strong>orb2</strong> : object</p>
-<blockquote>
-<div><p>orbital object, atomic orbital 2</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
-<blockquote class="last">
-<div><p>overlap integral (S)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.overlap_matrix">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">overlap_matrix</tt><a class="reference internal" href="_modules/molecular_integrals.html#overlap_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.overlap_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate matrix of overlap integrals between each atomic orbital</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
-<blockquote>
-<div><p>list of atomic orbitals for molecule</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>overlap_m</strong> : ndarray</p>
-<blockquote class="last">
-<div><p>matrix of overlap integrals between all atomic orbitals</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Notes</p>
-<p>Since the overlap integral is Hermitian only the lower diagonal
-portion of the matrix is calculated.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.two_electron_integral">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">two_electron_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#two_electron_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.two_electron_integral" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate two-electron electron repulsion integral</p>
-<p>ERI = .. math:: (ij|kl)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
-<blockquote>
-<div><p>orbital object, atomic orbital 1</p>
-</div></blockquote>
-<p><strong>orb2</strong> : object</p>
-<blockquote>
-<div><p>orbital object, atomic orbital 2</p>
-</div></blockquote>
-<p><strong>orb3</strong> : object</p>
-<blockquote>
-<div><p>orbital object, atomic orbital 3</p>
-</div></blockquote>
-<p><strong>orb4</strong> : object</p>
-<blockquote>
-<div><p>orbital object, atomic orbital 4</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
-<blockquote class="last">
-<div><p>electron repulsion integral (ERI)</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="molecular_integrals.two_electron_tensor">
-<tt class="descclassname">molecular_integrals.</tt><tt class="descname">two_electron_tensor</tt><a class="reference internal" href="_modules/molecular_integrals.html#two_electron_tensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.two_electron_tensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate two-electron repulsion integral tensor</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
-<blockquote>
-<div><p>list of atomic orbitals for molecule</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>ert</strong> : ndarray</p>
-<blockquote class="last">
-<div><p>two electron integral rank 4 tensor</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Notes</p>
-<p>The two electron repulsion tensor is a rank 4- tensor
-meaning the ndarray has 4 indicies, e.g. ert[i,j,k,l].</p>
-<p>The two electron integrals have 8-fold permutation
-symmetry, so only the lower octet of the tensor is
-calculated.</p>
 </dd></dl>
 
 </div>
@@ -605,8 +459,8 @@ containing the basis set.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">LTPsi Source Code Documentation</a><ul>
-<li><a class="reference internal" href="#module-molecule">molecule</a></li>
-<li><a class="reference internal" href="#module-molecular_integrals">molecular_integrals</a></li>
+<li><a class="reference internal" href="#module-c_molecular_integrals">molecule</a></li>
+<li><a class="reference internal" href="#module-molecule">molecular_integrals</a></li>
 <li><a class="reference internal" href="#module-orbital">orbital</a></li>
 </ul>
 </li>

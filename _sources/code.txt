@@ -2,12 +2,12 @@ LTPsi Source Code Documentation
 ===============================
 molecule
 --------
-.. automodule:: molecule
+.. automodule:: c_molecular_integrals
    :members:
 
 molecular_integrals
 -------------------
-.. automodule:: molecular_integrals
+.. automodule:: molecule
    :members:
 
 orbital
