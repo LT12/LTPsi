@@ -1,5 +1,9 @@
 LTPsi Source Code Documentation
 ===============================
+molecule
+--------
+.. automodule:: molecule
+   :members:
 
 molecular_integrals
 -------------------
