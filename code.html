@@ -58,6 +58,10 @@
 <dt id="molecular_integrals.coreham_matrix">
 <tt class="descclassname">molecular_integrals.</tt><tt class="descname">coreham_matrix</tt><a class="reference internal" href="_modules/molecular_integrals.html#coreham_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.coreham_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate one-electron core Hamiltonian matrix</p>
+<blockquote>
+<div><div class="math">
+\[H_{core} = KI + NAI\]</div>
+</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -74,9 +78,9 @@
 <blockquote>
 <div><p>list of nuclear charges for each atom</p>
 </div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
-<p><strong>coreham_m</strong> : ndarray</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>coreham_m</strong> : ndarray</p>
 <blockquote class="last">
 <div><p>core Hamiltonian matrix</p>
 </div></blockquote>
@@ -90,10 +94,36 @@
 <dt id="molecular_integrals.kinetic_integral">
 <tt class="descclassname">molecular_integrals.</tt><tt class="descname">kinetic_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#kinetic_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.kinetic_integral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate kinetic energy integral between 2 atomic orbitals</p>
-<p>:rtype : float
-:param orb1:atomic orbital 1
-:param orb2:atomic orbital 2
-:return:integral: kinetic energy integral</p>
+<blockquote>
+<div><div class="math">
+</div>
+</div></blockquote>
+<p>rac{1}{2}&lt; psi_ i <a href="#id1"><span class="problematic" id="id2">|\sum_N \nabla^2|</span></a> psi_j &gt;</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
+<blockquote>
+<div><blockquote>
+<div><p>orbital object, atomic orbital 1</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>orb2 <span class="classifier-delimiter">:</span> <span class="classifier">object</span></dt>
+<dd><p class="first last">orbital object, atomic orbital 2</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote class="last">
+<div><p>kinetic energy integral (KI)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -127,16 +157,42 @@ portion of the matrix is calculated.</p>
 <dt id="molecular_integrals.nuclear_integral">
 <tt class="descclassname">molecular_integrals.</tt><tt class="descname">nuclear_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#nuclear_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.nuclear_integral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate nuclear attraction integral between 2 atomic orbitals</p>
+<blockquote>
+<div><div class="math">
+\[\begin{split}&lt; \psi_ i |\sum_N \end{split}\]</div>
+</div></blockquote>
+<p>rac{-1}{r_N}|psi_j &gt;</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
+<blockquote>
+<div><blockquote>
+<div><p>orbital object, atomic orbital 1</p>
+</div></blockquote>
+<dl class="docutils">
+<dt>orb2 <span class="classifier-delimiter">:</span> <span class="classifier">object</span></dt>
+<dd><p class="first last">orbital object, atomic orbital 2</p>
+</dd>
+<dt>cart_matrix <span class="classifier-delimiter">:</span> <span class="classifier">float[:,:]</span></dt>
+<dd><p class="first last">matrix with Cartesian coordinates for each atom</p>
+</dd>
+<dt>atom_charge <span class="classifier-delimiter">:</span> <span class="classifier">array-like</span></dt>
+<dd><p class="first last">list of nuclear charges for each atom</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote class="last">
+<div><p>nuclear attraction integral (NAI)</p>
+</div></blockquote>
+</td>
+</tr>
 </tbody>
 </table>
-<p>:rtype :float
-:param orb1:atomic orbital 1
-:param orb2:atomic orbital 2
-:return:integral: nuclear attraction integral</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -179,10 +235,30 @@ portion of the matrix is calculated.</p>
 <dt id="molecular_integrals.overlap_integral">
 <tt class="descclassname">molecular_integrals.</tt><tt class="descname">overlap_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#overlap_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.overlap_integral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate overlap integral between 2 atomic orbitals</p>
-<p>:rtype : float
-:param orb1:atomic orbital 1
-:param orb2:atomic orbital 2
-:return:integral: overlap integral</p>
+<div class="math">
+\[\begin{split}&lt; \psi_ i | \psi_j &gt;\end{split}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
+<blockquote>
+<div><p>orbital object, atomic orbital 1</p>
+</div></blockquote>
+<p><strong>orb2</strong> : object</p>
+<blockquote>
+<div><p>orbital object, atomic orbital 2</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote class="last">
+<div><p>overlap integral (S)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -216,12 +292,38 @@ portion of the matrix is calculated.</p>
 <dt id="molecular_integrals.two_electron_integral">
 <tt class="descclassname">molecular_integrals.</tt><tt class="descname">two_electron_integral</tt><a class="reference internal" href="_modules/molecular_integrals.html#two_electron_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_integrals.two_electron_integral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate two-electron electron repulsion integral</p>
-<p>:rtype : float
-:param orb1:atomic orbital 1
-:param orb2:atomic orbital 2
-:param orb3:atomic orbital 3
-:param orb4:atomic orbital 4
-:return:integral: two electron integral</p>
+<div class="math">
+\[(ij|kl)\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orb1</strong> : object</p>
+<blockquote>
+<div><p>orbital object, atomic orbital 1</p>
+</div></blockquote>
+<p><strong>orb2</strong> : object</p>
+<blockquote>
+<div><p>orbital object, atomic orbital 2</p>
+</div></blockquote>
+<p><strong>orb3</strong> : object</p>
+<blockquote>
+<div><p>orbital object, atomic orbital 3</p>
+</div></blockquote>
+<p><strong>orb4</strong> : object</p>
+<blockquote>
+<div><p>orbital object, atomic orbital 4</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote class="last">
+<div><p>electron repulsion integral (ERI)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
