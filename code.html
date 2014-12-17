@@ -307,6 +307,10 @@ calculated.</p>
 <dt id="molecular_props.calc_nucl_repulsion">
 <tt class="descclassname">molecular_props.</tt><tt class="descname">calc_nucl_repulsion</tt><big>(</big><em>atom_charge</em>, <em>cart_matrix</em><big>)</big><a class="reference internal" href="_modules/molecular_props.html#calc_nucl_repulsion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_props.calc_nucl_repulsion" title="Permalink to this definition">¶</a></dt>
 <dd><p>calculates the nuclear repulsion energy between atoms in system</p>
+<p>The nuclear repulsion energy can be calculated using the classical
+coulomb potential formula:</p>
+<div class="math">
+\[E_{nuc} = \sum_i^{N} \sum_j^{i-1} \frac{Z_i Z_j}{r_{ij}}\]</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -319,9 +323,9 @@ calculated.</p>
 <blockquote>
 <div><p>matrix of coordinates for each atom in system</p>
 </div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
-<p><strong>nuc_repl</strong> : float</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>nuc_repl</strong> : float</p>
 <blockquote class="last">
 <div><p>nuclear repulsion energy</p>
 </div></blockquote>
@@ -329,11 +333,6 @@ calculated.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>The nuclear repulsion energy can be calculated using the classical
-coulomb potential formula:</p>
-<div class="math">
-\[E_{nuc} = \sum_i^{N} \sum_j^{i-1} \frac{Z_i Z_j}{r_{ij}}\]</div>
 </dd></dl>
 
 </div>
