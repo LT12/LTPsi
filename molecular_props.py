@@ -1,11 +1,11 @@
 from __future__ import division
-from numba import jit
+from numba import autojit
 import numpy as np
+from math import sqrt
 
 __author__ = 'larry'
 
 
-@jit
 def calc_nucl_repulsion(atom_charge, cart_matrix):
     """calculates the nuclear repulsion energy between atoms in system
 
@@ -23,24 +23,22 @@ def calc_nucl_repulsion(atom_charge, cart_matrix):
     -----
     The nuclear repulsion energy can be calculated using the classical
     coulomb potential formula:
-    .. math:: E_{nuc} = \sum \frac{Z_i Z_j}{r_{ij}}
+    .. math:: E_{nuc} = \\sum \\frac{Z_i Z_j}{r_{ij}}
     Only the lower diagonal portion of cart_matrix needs to be summed
     due to the symmetry of the problem, and the diagonal should not be
     summed.
 
     """
-
     nuc_repl = 0
-    n_atom = len(atom_charge)
+    n_atom = atom_charge.size
 
-    if n_atom > 1:
-        for i in xrange(n_atom):
-            for j in xrange(i):
-                r_i, r_j = cart_matrix[i, :], cart_matrix[j, :]
-                r_ij = np.sqrt(np.dot(r_i - r_j, r_i - r_j))
-                z_ij = atom_charge[i] * atom_charge[j]
+    for i in xrange(n_atom):
+        for j in xrange(i):
+            r_ij_v = cart_matrix[i, :] - cart_matrix[j, :]
+            r_ij = sqrt(np.dot(r_ij_v, r_ij_v))
+            z_ij = atom_charge[i] * atom_charge[j]
 
-                nuc_repl += z_ij / r_ij
+            nuc_repl += z_ij / r_ij
 
     return nuc_repl
 

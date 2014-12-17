@@ -2,7 +2,7 @@
 Created on Feb 20, 2014
 @author: Larry
 '''
-from Molecule import Molecule
+from molecule import Molecule
 from RotationalParam import RotationalParam
 from scf import SCF
 import numpy as np

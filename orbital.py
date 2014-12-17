@@ -41,17 +41,33 @@ class Orbital(object):
     ----------
     orb_data : list
                contains coefficients and angular momentum of orbital
-    center : float ndarray
+    center : ndarray
              coordinates for the center of orbital
     atom : int
            number of the atom on which of the orbital is centered on
+
+    Attributes
+    ----------
+    atom : int
+           number of the atom in mol file on which GTO is center on.
+    center : ndarray
+            coordinates for the center of the CGTO
+    qnums : tuple
+            angular quantum numbers for the CGTO
+    n_prim : int
+             number of primitive GTOs in the CGTO
+    d : ndarray
+        array of contraction coefficients for the CGTO
+    a : ndarray
+        array of exponential coefficients for the CGTO
 
     Notes
     -----
     Orbital i centered on atom A with nuclear coordinates (X_A,Y_A,Z_A)
 
     .. math::
-    \phi_{i,A} = [(x - X_A)^n_i * (y - Y_A)^m_i * (z - Z_A)^L_i] * \sum_j d_j * e^(-a_j * (x^2 + y^2 + z^2) )
+       \\phi_{i,A} = [(x - X_A)^n_i * (y - Y_A)^m_i * (z - Z_A)^L_i] *
+       \\sum_j d_j * e^{-a_j * |r - A|^2 }
     """
 
     def __init__(self, orb_data, center, atom):
@@ -163,6 +179,7 @@ def det_orbs(basis, atom_type, cart_matrix):
                List of all atoms in molecule as element names
     cart_matrix: float ndarray
                  Matrix of Cartesian coordinates for each atom
+
     Returns
     -------
     orbs : list
@@ -232,4 +249,4 @@ def det_orbs(basis, atom_type, cart_matrix):
     for orb in orbs:
         num_prim += orb.n_prim
 
-    return orbs, num_prim
+    return tuple(orbs), num_prim

@@ -1,15 +1,15 @@
-"""cython version
+#cython: wraparound = False, boundscheck = False
+"""cython version of moleculer_integrals
 
 """
-__author__ = 'larry'
 
 import numpy as np
-from cPrimMolInt import primOverlapIntegral, primNuclearAttractionIntegral, primElecRepulInt
-from numba import jit
+cimport cython
+cimport numpy as np
+from cPrimMolInt cimport primOverlapIntegral, primNuclearAttractionIntegral, primElecRepulInt
 
 
-@jit
-def overlap_matrix(orbs):
+cpdef np.ndarray overlap_matrix(tuple orbs):
     """Generate matrix of overlap integrals between each atomic orbital
 
         Parameters
@@ -19,7 +19,7 @@ def overlap_matrix(orbs):
 
         Returns
         -------
-        overlap_m : ndarray
+        overlap_m_v : ndarray
                     matrix of overlap integrals between all atomic orbitals
 
         Notes
@@ -27,20 +27,22 @@ def overlap_matrix(orbs):
         Since the overlap integral is Hermitian only the lower diagonal
         portion of the matrix is calculated.
     """
+    cdef int i, j
 
-    n = len(orbs)
-    overlap_m = np.zeros((n, n), dtype=np.float64)
+    cdef int n = len(orbs)
+    cdef double [:,:] overlap_m_v = np.zeros((n, n), dtype=np.float64)
 
     for i in xrange(n):
         for j in xrange(i + 1):
-            overlap_m[i, j] = overlap_integral(orbs[i], orbs[j])
-            overlap_m[j, i] = overlap_m[i, j]
-
+            overlap_m_v[i, j] = overlap_integral(orbs[i], orbs[j])
+            overlap_m_v[j, i] = overlap_m_v[i, j]
+    
+    cdef np.ndarray overlap_m = np.asarray(overlap_m_v)
+    
     return overlap_m
 
 
-@jit
-def kinetic_matrix(orbs):
+cpdef np.ndarray kinetic_matrix(tuple orbs):
     """Generate matrix of kinetic energy integrals between each atomic orbital
 
         Parameters
@@ -58,20 +60,22 @@ def kinetic_matrix(orbs):
         Since the kinetic energy integral is Hermitian only the lower
         portion of the matrix is calculated.
     """
+    cdef int i, j
 
-    n = len(orbs)
-    kinetic_m = np.zeros((n, n), dtype=np.float64)
+    cdef int n = len(orbs)
+    cdef double [:,:] kinetic_m_v = np.zeros((n, n), dtype=np.float64)
 
     for i in xrange(n):
         for j in xrange(i + 1):
-            kinetic_m[i, j] = kinetic_integral(orbs[i], orbs[j])
-            kinetic_m[j, i] = kinetic_m[i, j]
+            kinetic_m_v[i, j] = kinetic_integral(orbs[i], orbs[j])
+            kinetic_m_v[j, i] = kinetic_m_v[i, j]
+
+    cdef np. ndarray kinetic_m = np.asarray(kinetic_m_v)
 
     return kinetic_m
 
 
-@jit
-def nuclear_matrix(orbs, cart_matrix, atom_charge):
+cpdef np.ndarray nuclear_matrix(tuple orbs, double[:,:] cart_matrix, long[:] atom_charge):
     """Generate matrix of nuclear attraction energy integrals
 
     Parameters
@@ -91,21 +95,24 @@ def nuclear_matrix(orbs, cart_matrix, atom_charge):
     Since the nuclear attraction integral is Hermitian, only the lower
     portion of the matrix is calculated.
     """
+    cdef int i,j
 
-    n = len(orbs)
-    nuclear_m = np.zeros((n, n), dtype=np.float64)
+    cdef int n = len(orbs)
+    cdef double [:,:] nuclear_m_v = np.zeros((n, n), dtype=np.float64)
 
     for i in xrange(n):
         for j in xrange(i + 1):
-            nuclear_m[i, j] = nuclear_integral(orbs[i], orbs[j],
+            nuclear_m_v[i, j] = nuclear_integral(orbs[i], orbs[j],
                                                cart_matrix, atom_charge)
-            nuclear_m[j, i] = nuclear_m[i, j]
+            nuclear_m_v[j, i] = nuclear_m_v[i, j]
+
+    cdef np. ndarray nuclear_m = np.asarray(nuclear_m_v)
 
     return nuclear_m
 
 
-@jit
-def coreham_matrix(orbs, cart_matrix, atom_charge):
+cpdef np.ndarray coreham_matrix(tuple orbs, double[:,:] cart_matrix,
+                                long[:] atom_charge):
     """Generate one-electron core Hamiltonian matrix
 
         .. math:: H_{core} = KI + NAI
@@ -125,13 +132,12 @@ def coreham_matrix(orbs, cart_matrix, atom_charge):
                 core Hamiltonian matrix
     """
 
-    coreham_m = nuclear_matrix(orbs, cart_matrix, atom_charge) + kinetic_matrix(orbs)
+    cdef np.ndarray coreham_m = nuclear_matrix(orbs, cart_matrix, atom_charge) + kinetic_matrix(orbs)
 
     return coreham_m
 
 
-@jit
-def two_electron_tensor(orbs):
+cpdef np.ndarray two_electron_tensor(orbs):
     """Generate two-electron repulsion integral tensor
 
     Parameters
@@ -153,33 +159,36 @@ def two_electron_tensor(orbs):
     symmetry, so only the lower octet of the tensor is
     calculated.
     """
+    cdef int i, j, k , l
 
-    n = len(orbs)
-    ert = np.zeros((n, n, n, n), dtype=np.float64)
+    cdef int n = len(orbs)
+    cdef double [:,:,:,:] ert_v = np.zeros((n, n, n, n), dtype=np.float64)
 
     for i in xrange(n):
         for j in xrange(i + 1):
             for k in xrange(n):
                 for l in xrange(k + 1):
                     if (i + 1) * (j + 1) >= (k + 1) * (l + 1):
-                        ert[i, j, k, l] = two_electron_integral(orbs[i], orbs[j],
+                        ert_v[i, j, k, l] = two_electron_integral(orbs[i], orbs[j],
                                                                 orbs[k], orbs[l])
-                        ert[j, i, k, l] = ert[i, j, k, l]
-                        ert[i, j, l, k] = ert[i, j, k, l]
-                        ert[j, i, l, k] = ert[i, j, k, l]
-                        ert[k, l, i, j] = ert[i, j, k, l]
-                        ert[l, k, i, j] = ert[i, j, k, l]
-                        ert[k, l, j, i] = ert[i, j, k, l]
-                        ert[l, k, j, i] = ert[i, j, k, l]
+                        ert_v[j, i, k, l] = ert_v[i, j, k, l]
+                        ert_v[i, j, l, k] = ert_v[i, j, k, l]
+                        ert_v[j, i, l, k] = ert_v[i, j, k, l]
+                        ert_v[k, l, i, j] = ert_v[i, j, k, l]
+                        ert_v[l, k, i, j] = ert_v[i, j, k, l]
+                        ert_v[k, l, j, i] = ert_v[i, j, k, l]
+                        ert_v[l, k, j, i] = ert_v[i, j, k, l]
+
+    cdef np.ndarray ert = np.asarray(ert_v)
+
     return ert
 
 
-@jit
-def overlap_integral(orb1, orb2):
+cdef double overlap_integral(object orb1, object orb2):
     """Calculate overlap integral between 2 atomic orbitals
     
         .. math::
-                 < \psi_ i | \psi_j >
+                 < \\psi_ i | \\psi_j >
 
         Parameters
         ----------
@@ -193,8 +202,11 @@ def overlap_integral(orb1, orb2):
         float
               overlap integral (S)
     """
+    cdef int i, j, x1, y1, z1, x2, y2, z2, nprim1, nprim2
+    cdef double [:] d1 ,d2, a1, a2, cent1, cent2
+    cdef double const
 
-    integral = 0
+    cdef double integral = 0
     pol = primOverlapIntegral
 
     nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
@@ -214,12 +226,11 @@ def overlap_integral(orb1, orb2):
     return integral
 
 
-@jit
-def kinetic_integral(orb1, orb2):
+cdef double kinetic_integral(object orb1, object orb2):
     """Calculate kinetic energy integral between 2 atomic orbitals
 
         .. math::
-                 \frac{1}{2} < \psi_ i |\nabla^2 | \psi_j >
+                 \\frac{1}{2} < \\psi_ i |\\nabla^2 | \\psi_j >
 
         Parameters
         ----------
@@ -233,8 +244,11 @@ def kinetic_integral(orb1, orb2):
         float
               kinetic energy integral (KI)
     """
+    cdef int i, j, x1, y1, z1, x2, y2, z2, nprim1, nprim2
+    cdef double [:] d1 ,d2, a1, a2, cent1, cent2
+    cdef double const, p, px2, py2, pz2,  pxm2, pym2, pzm2
 
-    integral = 0
+    cdef double integral = 0
     pol = primOverlapIntegral
 
     nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
@@ -275,16 +289,18 @@ def kinetic_integral(orb1, orb2):
             integral += const * (a2[j] * (2 * (x2 + y2 + z2) + 3) * p -
                                  (2 * a2[j] ** 2) * (px2 + py2 + pz2)
                                  - 0.5 * (x2 * (x2 - 1) * pxm2 +
-                                          y2 * (y2 - 1) * pym2 + z2 * (z2 - 1) * pzm2))
+                                 y2 * (y2 - 1) * pym2 + z2 * (z2 - 1) * pzm2))
+
     return integral
 
 
-@jit()
-def nuclear_integral(orb1, orb2, cart_matrix, atom_charge):
+cdef double nuclear_integral(object orb1, object orb2,
+                             double [:,:] cart_matrix,
+                             long [:] atom_charge):
     """Calculate nuclear attraction integral between 2 atomic orbitals
 
         .. math::
-                 < \psi_ i |\sum_N \frac{-1}{r_N}|\psi_j >
+                 < \\psi_ i |\\sum_N \\frac{-1}{r_N}|\\psi_j >
 
         Parameters
         ----------
@@ -302,8 +318,11 @@ def nuclear_integral(orb1, orb2, cart_matrix, atom_charge):
         float
               nuclear attraction integral (NAI)
     """
+    cdef int i, j, k, x1, y1, z1, x2, y2, z2, nprim1, nprim2
+    cdef double [:] d1 ,d2, a1, a2, cent1, cent2
+    cdef double const
 
-    integral = 0
+    cdef double integral = 0
     nai = primNuclearAttractionIntegral
 
     nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
@@ -317,17 +336,18 @@ def nuclear_integral(orb1, orb2, cart_matrix, atom_charge):
         for j in xrange(nprim2):
             const = d1[i] * d2[j]  # product of contraction coefficients
 
-            for idx, Z in enumerate(atom_charge):
-                integral -= const * Z * nai(cart_matrix[idx, 0], cart_matrix[idx, 1],
-                                            cart_matrix[idx, 2],
-                                            cent1[0], cent1[1], cent1[2],
-                                            cent2[0], cent2[1], cent2[2],
-                                            a1[i], a2[j], x1, y1, z1, x2, y2, z2)
+            for k in xrange(len(atom_charge)):
+                integral -= const * atom_charge[k] * \
+                    nai(cart_matrix[k, 0], cart_matrix[k, 1],
+                    cart_matrix[k, 2], cent1[0], cent1[1], cent1[2],
+                    cent2[0], cent2[1], cent2[2], a1[i], a2[j], x1, y1,
+                    z1, x2, y2, z2)
+
     return integral
 
 
-@jit()
-def two_electron_integral(orb1, orb2, orb3, orb4):
+cdef double two_electron_integral(object orb1, object orb2,
+                           object orb3, object orb4):
     """Calculate two-electron electron repulsion integral
 
         ERI = .. math:: (ij|kl)
@@ -348,8 +368,13 @@ def two_electron_integral(orb1, orb2, orb3, orb4):
         float
               electron repulsion integral (ERI)
     """
+    cdef int i, j, x1, y1, z1, x2, y2, z2, nprim1, nprim2
+    cdef int k, l, x3, y3, z3, x4, y4, z4, nprim3, nprim4
+    cdef double [:] d1 ,d2, a1, a2, cent1, cent2
+    cdef double [:] d3 ,d4, a3, a4, cent3, cent4
+    cdef double const
 
-    integral = 0
+    cdef double integral = 0
     eri = primElecRepulInt
 
     nprim1, nprim2 = orb1.n_prim, orb2.n_prim  # number of primitive GTOs
@@ -378,4 +403,5 @@ def two_electron_integral(orb1, orb2, orb3, orb4):
                                             a1[i], a2[j], a3[k], a4[l], x1,
                                             x2, x3, x4, y1, y2, y3, y4, z1,
                                             z2, z3, z4)
+
     return integral
