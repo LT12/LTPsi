@@ -51,8 +51,99 @@
             
   <div class="section" id="ltpsi-source-code-documentation">
 <h1>LTPsi Source Code Documentation<a class="headerlink" href="#ltpsi-source-code-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-molecule">
+<span id="molecule"></span><h2>molecule<a class="headerlink" href="#module-molecule" title="Permalink to this headline">¶</a></h2>
+<p>molecule.py contains the Molecule class which creates the molecule
+object. A object containing all of the attributes prescribed to
+a molecule, including coordinates for each atom, identity of each atom,
+molecular mass, molecular formula, bonding within the molecule, and
+other attributes. In order to create a molecule object, a MDL MolFile,
+following the MDL MolFile specifications, needs to be passed in,
+which is then parsed by methods within the class.</p>
+<dl class="class">
+<dt id="molecule.Molecule">
+<em class="property">class </em><tt class="descclassname">molecule.</tt><tt class="descname">Molecule</tt><big>(</big><em>mol_file</em>, <em>units='bohr'</em><big>)</big><a class="reference internal" href="_modules/molecule.html#Molecule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecule.Molecule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads and parses a MDL .mol file, generating a molecule object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mol_file</strong> : .mol file</p>
+<blockquote>
+<div><p>a MDL MolFile containing coordinates and atom info</p>
+</div></blockquote>
+<p><strong>units</strong> : str</p>
+<blockquote class="last">
+<div><p>units for the coordinate system; either Angstrom or Bohr</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Currently unstable, so a new Molecule object should be created
+instead of attempting to modify a molecule&#8217;s parameters,
+which may lead to unexpected results or program crash.</p>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>atom_type</td>
+<td>(array-like) a list containing the element of each atom in molecule</td>
+</tr>
+<tr class="row-even"><td>units</td>
+<td>(str) units for the coordinate system; either Angstrom or Bohr</td>
+</tr>
+<tr class="row-odd"><td>cart_matrix</td>
+<td>(ndarray) matrix containing coordinates for each atom</td>
+</tr>
+<tr class="row-even"><td>bond_matrix</td>
+<td>(ndarray) matrix containing the type of bond between each atom</td>
+</tr>
+<tr class="row-odd"><td>molecular_mass</td>
+<td>(float) the molecular weight of the molecule in g per mol</td>
+</tr>
+<tr class="row-even"><td>molecular_form</td>
+<td>(str) molecular formula of the molecule (alphabetically)</td>
+</tr>
+<tr class="row-odd"><td>center_of_mass</td>
+<td>(array-like) coordinates of the center of mass of the molecule</td>
+</tr>
+<tr class="row-even"><td>num_atom</td>
+<td>(int) number of atoms in the molecule</td>
+</tr>
+<tr class="row-odd"><td>num_e</td>
+<td>(int) number of electrons in molecule</td>
+</tr>
+<tr class="row-even"><td>isotope_diff</td>
+<td>(array-like) an array where each element describes the isotopic difference of the element from its most abundant species</td>
+</tr>
+<tr class="row-odd"><td>atom_charge</td>
+<td>(array-like)</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="molecule.Molecule.to_angstrom">
+<tt class="descname">to_angstrom</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/molecule.html#Molecule.to_angstrom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecule.Molecule.to_angstrom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert units for coordinate system to Angstroms</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="molecule.Molecule.to_bohr">
+<tt class="descname">to_bohr</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/molecule.html#Molecule.to_bohr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecule.Molecule.to_bohr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert units for coordinate system to Bohrs</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-c_molecular_integrals">
-<span id="molecule"></span><h2>molecule<a class="headerlink" href="#module-c_molecular_integrals" title="Permalink to this headline">¶</a></h2>
+<span id="molecular-integrals"></span><h2>molecular_integrals<a class="headerlink" href="#module-c_molecular_integrals" title="Permalink to this headline">¶</a></h2>
 <p>cython version of moleculer_integrals</p>
 <dl class="function">
 <dt id="c_molecular_integrals.coreham_matrix">
@@ -211,94 +302,42 @@ calculated.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-molecule">
-<span id="molecular-integrals"></span><h2>molecular_integrals<a class="headerlink" href="#module-molecule" title="Permalink to this headline">¶</a></h2>
-<p>molecule.py contains the Molecule class which creates the molecule
-object. A object containing all of the attributes prescribed to
-a molecule, including coordinates for each atom, identity of each atom,
-molecular mass, molecular formula, bonding within the molecule, and
-other attributes. In order to create a molecule object, a MDL MolFile,
-following the MDL MolFile specifications, needs to be passed in,
-which is then parsed by methods within the class.</p>
-<dl class="class">
-<dt id="molecule.Molecule">
-<em class="property">class </em><tt class="descclassname">molecule.</tt><tt class="descname">Molecule</tt><big>(</big><em>mol_file</em>, <em>units='bohr'</em><big>)</big><a class="reference internal" href="_modules/molecule.html#Molecule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecule.Molecule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads and parses a MDL .mol file, generating a molecule object</p>
+<div class="section" id="module-molecular_props">
+<span id="molecular-props"></span><h2>molecular_props<a class="headerlink" href="#module-molecular_props" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="molecular_props.calc_nucl_repulsion">
+<tt class="descclassname">molecular_props.</tt><tt class="descname">calc_nucl_repulsion</tt><big>(</big><em>atom_charge</em>, <em>cart_matrix</em><big>)</big><a class="reference internal" href="_modules/molecular_props.html#calc_nucl_repulsion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecular_props.calc_nucl_repulsion" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates the nuclear repulsion energy between atoms in system</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mol_file</strong> : .mol file</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>atom_charge</strong> : array-like</p>
 <blockquote>
-<div><p>a MDL MolFile containing coordinates and atom info</p>
+<div><p>list of nuclear charges for each atom in system</p>
 </div></blockquote>
-<p><strong>units</strong> : str</p>
-<blockquote class="last">
-<div><p>units for the coordinate system; either Angstrom or Bohr</p>
+<p><strong>cart_matrix</strong> : ndarray</p>
+<blockquote>
+<div><p>matrix of coordinates for each atom in system</p>
 </div></blockquote>
+<p><strong>Returns</strong></p>
+<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>nuc_repl</strong> : float</p>
+<blockquote>
+<div><p>nuclear repulsion energy</p>
+</div></blockquote>
+<p><strong>Notes</strong></p>
+<p><strong>&#8212;&#8211;</strong></p>
+<p><strong>The nuclear repulsion energy can be calculated using the classical</strong></p>
+<p><strong>coulomb potential formula:</strong></p>
+<p><strong>.. math:: E_{nuc} = sum frac{Z_i Z_j}{r_{ij}}</strong></p>
+<p><strong>Only the lower diagonal portion of cart_matrix needs to be summed</strong></p>
+<p><strong>due to the symmetry of the problem, and the diagonal should not be</strong></p>
+<p class="last"><strong>summed.</strong></p>
 </td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Notes</p>
-<p>Currently unstable, so a new Molecule object should be created
-instead of attempting to modify a molecule&#8217;s parameters,
-which may lead to unexpected results or program crash.</p>
-<p class="rubric">Attributes</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="10%" />
-<col width="90%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>atom_type</td>
-<td>(array-like) a list containing the element of each atom in molecule</td>
-</tr>
-<tr class="row-even"><td>units</td>
-<td>(str) units for the coordinate system; either Angstrom or Bohr</td>
-</tr>
-<tr class="row-odd"><td>cart_matrix</td>
-<td>(ndarray) matrix containing coordinates for each atom</td>
-</tr>
-<tr class="row-even"><td>bond_matrix</td>
-<td>(ndarray) matrix containing the type of bond between each atom</td>
-</tr>
-<tr class="row-odd"><td>molecular_mass</td>
-<td>(float) the molecular weight of the molecule in g per mol</td>
-</tr>
-<tr class="row-even"><td>molecular_form</td>
-<td>(str) molecular formula of the molecule (alphabetically)</td>
-</tr>
-<tr class="row-odd"><td>center_of_mass</td>
-<td>(array-like) coordinates of the center of mass of the molecule</td>
-</tr>
-<tr class="row-even"><td>num_atom</td>
-<td>(int) number of atoms in the molecule</td>
-</tr>
-<tr class="row-odd"><td>num_e</td>
-<td>(int) number of electrons in molecule</td>
-</tr>
-<tr class="row-even"><td>isotope_diff</td>
-<td>(array-like) an array where each element describes the isotopic difference of the element from its most abundant species</td>
-</tr>
-<tr class="row-odd"><td>atom_charge</td>
-<td>(array-like)</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Methods</p>
-<dl class="method">
-<dt id="molecule.Molecule.to_angstrom">
-<tt class="descname">to_angstrom</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/molecule.html#Molecule.to_angstrom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecule.Molecule.to_angstrom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert units for coordinate system to Angstroms</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="molecule.Molecule.to_bohr">
-<tt class="descname">to_bohr</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/molecule.html#Molecule.to_bohr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#molecule.Molecule.to_bohr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert units for coordinate system to Bohrs</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -459,8 +498,9 @@ containing the basis set.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">LTPsi Source Code Documentation</a><ul>
-<li><a class="reference internal" href="#module-c_molecular_integrals">molecule</a></li>
-<li><a class="reference internal" href="#module-molecule">molecular_integrals</a></li>
+<li><a class="reference internal" href="#module-molecule">molecule</a></li>
+<li><a class="reference internal" href="#module-c_molecular_integrals">molecular_integrals</a></li>
+<li><a class="reference internal" href="#module-molecular_props">molecular_props</a></li>
 <li><a class="reference internal" href="#module-orbital">orbital</a></li>
 </ul>
 </li>
