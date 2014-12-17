@@ -159,7 +159,7 @@ which may lead to unexpected results or program crash.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
 <blockquote>
-<div><p>list of atomic orbitals for molecule</p>
+<div><p>list of atomic orbitals for molecule, see orbital: det_orbs</p>
 </div></blockquote>
 <p><strong>cart_matrix</strong> : ndarray</p>
 <blockquote>
@@ -191,7 +191,7 @@ which may lead to unexpected results or program crash.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
 <blockquote>
-<div><p>list of atomic orbitals for molecule</p>
+<div><p>list of atomic orbitals for molecule, see orbital: det_orbs</p>
 </div></blockquote>
 </td>
 </tr>
@@ -218,7 +218,7 @@ portion of the matrix is calculated.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
 <blockquote>
-<div><p>list of atomic orbitals for molecule</p>
+<div><p>list of atomic orbitals for molecule, see orbital: det_orbs</p>
 </div></blockquote>
 <p><strong>cart_matrix</strong> : ndarray</p>
 <blockquote>
@@ -253,7 +253,7 @@ portion of the matrix is calculated.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
 <blockquote>
-<div><p>list of atomic orbitals for molecule</p>
+<div><p>list of atomic orbitals for molecule, see orbital: det_orbs</p>
 </div></blockquote>
 </td>
 </tr>
@@ -280,7 +280,7 @@ portion of the matrix is calculated.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>orbs</strong> : array-like</p>
 <blockquote>
-<div><p>list of atomic orbitals for molecule</p>
+<div><p>list of atomic orbitals for molecule, see orbital: det_orbs</p>
 </div></blockquote>
 </td>
 </tr>
@@ -333,10 +333,7 @@ calculated.</p>
 <p>The nuclear repulsion energy can be calculated using the classical
 coulomb potential formula:</p>
 <div class="math">
-\[E_{nuc} = \sum_i \sum_j \frac{Z_i Z_j}{r_{ij}}\]</div>
-<p>Only the lower diagonal portion of cart_matrix needs to be summed
-due to the symmetry of the problem, and the diagonal should not be
-summed.</p>
+\[E_{nuc} = \sum_i^{N} \sum_j^{i-1} \frac{Z_i Z_j}{r_{ij}}\]</div>
 </dd></dl>
 
 </div>
